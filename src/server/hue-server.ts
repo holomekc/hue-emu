@@ -1,6 +1,8 @@
 import * as bodyParser from 'body-parser';
-import express from "express";
+import express from 'express';
 import {Express, Request, Response} from 'express';
+import {EMPTY, merge} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {AbstractHueServer} from '../abstract-hue-server';
 import {HueBuilder} from '../builder/hue-builder';
 import {HueError} from '../error/hue-error';
@@ -84,30 +86,47 @@ export class HueServer extends AbstractHueServer {
 
         const response: any[] = [];
 
-        let currentDevice = {};
+        let currentLight = {};
+
+        const observables: any = [];
 
         Object.keys(req.body).forEach((key) => {
             const value = req.body[key];
             this.logger.fine(`HueServer: Set key=${key} to value=${value}`);
 
-            const name = `/lights/${lightId}/state/${key}`;
-            const item: any = {};
-
-            this.callbacks.onState(username, lightId, key, value).subscribe((device) => {
-                item.success = {
-                    [name]: value
+            observables.push(this.callbacks.onState(username, lightId, key, value).pipe(catchError(err => {
+                const name = `/lights/${lightId}/state/${key}`;
+                const item: any = {
+                    error: ErrorResponse.createMessage(err, `${name}`)
                 };
-                currentDevice = device;
-            }, (err: HueError) => {
-                item.error = ErrorResponse.createMessage(err, `${name}`);
-            });
-
-            response.push(item);
+                response.push(item);
+                return EMPTY;
+            }), map(light => {
+                return {key: key, value: value, light: light};
+            })));
         });
-        if (isDefined(currentDevice)) {
-            this.logger.fine(`HueServer: New light state:\n${JSON.stringify((currentDevice as any).state)}\n`);
-        }
-        res.json(response);
+
+        merge(...observables).subscribe({
+            next: (entry: any) => {
+                const name = `/lights/${lightId}/state/${entry.key}`;
+                const item: any = {
+                    success: {
+                        [name]: entry.value
+                    }
+                };
+
+                // yes we are overwriting the current light all the time so that we have the complete object at the end
+                // TODO: maybe remove this. This is just for logging the complete change. Makes it more complicated...
+                currentLight = entry.light;
+                response.push(item);
+            },
+            complete: () => {
+                if (isDefined(currentLight)) {
+                    this.logger.fine(`HueServer: New light state:\n${JSON.stringify((currentLight as any).state)}\n`);
+                }
+                res.json(response);
+            }
+        });
     };
 
     private onDiscovery = (req: Request, res: Response) => {

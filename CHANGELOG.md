@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.4] - 2020-02-28
+### Fixed
+- error handling in onState function
+
 ## [0.0.3] - 2020-02-27
 ### Fixed
 - error handling and response

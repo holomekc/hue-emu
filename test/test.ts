@@ -1,3 +1,4 @@
+import {monitorEventLoopDelay} from 'perf_hooks';
 import {Observable, of, throwError} from 'rxjs';
 import {HueBuilder} from '../src';
 import {HueError} from '../src/error/hue-error';
@@ -48,5 +49,6 @@ const server = new HueServer(hueBuilder, {
     onState(username: string, lightId: string, key: string, value: any): Observable<any> {
         (devices as any)[lightId].state[key] = value;
         return of((devices as any)[lightId]);
+        // return throwError(HueError.RESOURCE_NOT_AVAILABLE.withParams(lightId));
     }
 });
