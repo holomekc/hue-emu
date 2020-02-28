@@ -5,7 +5,7 @@
  * @author Christopher Holomek
  * @since 26.02.2020
  */
-import {DiscoveryHost} from './discovery-host';
+import {Https} from './https';
 
 export interface Port {
 
@@ -13,5 +13,5 @@ export interface Port {
      * Set port
      * @param port
      */
-    withPort(port: number): DiscoveryHost;
+    withPort(port: number): Https;
 }

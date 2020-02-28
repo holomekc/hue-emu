@@ -2,6 +2,8 @@ import {DefaultLogger, Logger} from '../logger';
 import {DiscoveryHost} from './discovery-host';
 import {DiscoveryPort} from './discovery-port';
 import {Host} from './host';
+import {Https} from './https';
+import {HttpsConfig} from './https-config';
 import {Port} from './port';
 import {Udn} from './udn';
 
@@ -11,10 +13,11 @@ import {Udn} from './udn';
  * @author Christopher Holomek
  * @since 26.02.2020
  */
-export class HueBuilder implements Host, Port, DiscoveryHost, DiscoveryPort, Udn{
+export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPort, Udn{
 
     private _host: string = undefined as unknown as string;
     private _port: number = undefined as unknown as number;
+    private _httpsConfig: HttpsConfig | undefined = undefined;
     private _discoveryHost: string = undefined as unknown as string;
     private _discoveryPort: number = undefined as unknown as number;
     private _udn: string = undefined as unknown as string;
@@ -39,8 +42,13 @@ export class HueBuilder implements Host, Port, DiscoveryHost, DiscoveryPort, Udn
         return this;
     }
 
-    withPort(port: number): DiscoveryHost {
+    withPort(port: number): Https {
         this._port = port;
+        return this;
+    }
+
+    withHttps(httpsConfig: HttpsConfig |undefined): DiscoveryHost {
+        this._httpsConfig = httpsConfig;
         return this;
     }
 
@@ -82,6 +90,13 @@ export class HueBuilder implements Host, Port, DiscoveryHost, DiscoveryPort, Udn
      */
     get port(): number {
         return this._port;
+    }
+
+    /**
+     * Get https configuration
+     */
+    get httpsConfig(): HttpsConfig | undefined {
+        return this._httpsConfig;
     }
 
     /**

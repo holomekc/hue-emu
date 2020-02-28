@@ -1,13 +1,13 @@
 import * as bodyParser from 'body-parser';
 import express from 'express';
 import {Express, Request, Response} from 'express';
-import {EMPTY, merge} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {AbstractHueServer} from '../abstract-hue-server';
+import * as http from 'http';
+import * as https from 'https';
 import {HueBuilder} from '../builder/hue-builder';
 import {HueError} from '../error/hue-error';
-import {PairingEvent} from '../events/pairing-event';
-import {isDefined} from '../util/utils';
+import {isUndefined} from '../util/utils';
+import {HueFallback} from './hue-fallback';
+import {HueLightsApi} from './hue-lights-api';
 import {HueServerCallback} from './hue-server-callback';
 import {ErrorResponse} from '../response/error-response';
 import {discovery} from '../util/discovery';
@@ -18,33 +18,88 @@ import {discovery} from '../util/discovery';
  * @author Christopher Holomek
  * @since 26.02.2020
  */
-export class HueServer extends AbstractHueServer {
+export class HueServer {
 
-    private readonly server: Express;
+    private readonly app: Express;
 
-    constructor(builder: HueBuilder, private callbacks: HueServerCallback) {
-        super(builder);
+    constructor(private builder: HueBuilder, private callbacks: HueServerCallback) {
 
-        this.server = express();
-        this.server.use(bodyParser.json());
-        this.server.use(bodyParser.urlencoded({extended: true}));
+        this.app = express();
+        this.app.use(bodyParser.json({type: '*/*'}));
 
-        this.server.post('/api', this.onPairing);
-        this.server.get('/api/:username/lights', this.onLights);
-        this.server.get('/api/:username/lights/:id', this.onLight);
-        this.server.put('/api/:username/lights/:id/state', this.onState);
-        this.server.get('/api/discovery.xml', this.onDiscovery);
-
-        this.server.listen(this.port, this.host, () => {
-            this.logger.debug(`HueServer: Server listening ${this.host}:${this.port}`);
+        this.app.use(bodyParser.urlencoded({extended: true}));
+        this.app.use((req, res, next) => {
+            res.append('Access-Control-Allow-Origin', ['*']);
+            res.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE, HEAD');
+            res.append('Access-Control-Allow-Credentials', 'true');
+            res.append('Access-Control-Max-Age', '3600');
+            res.append('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+            res.append('Connection', 'close'); // This is important. Otherwise some clients may fail
+            next();
         });
+
+        this.app.get('/api/discovery.xml', this.onDiscovery);
+
+        // 1. Lights API
+        new HueLightsApi(this.app, this.builder, this.callbacks);
+
+        // 2. Groups API
+
+        // 3. Schedules API
+
+        // 4. Scenes API
+
+        // 6. Sensors API
+
+        // 7. Configuration API
+        this.app.post('/api', this.onPairing);
+        this.app.get('/api/config', this.onConfig);
+        this.app.get('/api/:username', this.onAll);
+
+        // 8. Info API (deprecated as of 1.15)
+
+        // 9. Resourcelinks API
+
+        // 10. Capabilities API
+
+        // Fallback
+        new HueFallback(this.app, this.builder, this.callbacks);
+
+        const httpServer = http.createServer(this.app);
+
+        httpServer.listen(this.builder.port, this.builder.host, () => {
+            this.builder.logger.debug(`HueServer: Http-Server listening ${this.builder.host}:${this.builder.port}`);
+        });
+
+        if (this.builder.httpsConfig) {
+            const options = {
+                key: this.builder.httpsConfig.key,
+                cert: this.builder.httpsConfig.cert,
+                rejectUnauthorized: false,
+            };
+
+            const httpsServer = https.createServer(options, this.app);
+
+            httpsServer.listen(this.builder.httpsConfig.port, this.builder.host, () => {
+                this.builder.logger.debug(`HueServer: Https-Server listening ${this.builder.host}:${this.builder.httpsConfig?.port}`);
+            });
+        }
     }
 
-    private onPairing = (req: Request, res: Response) => {
-        this.logger.debug(`HueServer: Incoming pairing request:\n${JSON.stringify(req.body)}\n`);
-        const user = req.body as PairingEvent;
+    private onDiscovery = (req: Request, res: Response) => {
+        this.builder.logger.debug(`HueServer: Incoming discovery request.`);
+        res.contentType('application/xml');
+        res.send(discovery(this.builder.discoveryHost, this.builder.discoveryPort, this.builder.udn));
+    };
 
-        this.callbacks.onPairing(user).subscribe(username => {
+    private onPairing = (req: Request, res: Response) => {
+        this.builder.logger.debug(`HueServer: Incoming pairing request:\n${JSON.stringify(req.body)}\n`);
+
+        if (isUndefined(req.body.devicetype)) {
+            res.json(ErrorResponse.create(HueError.PARAMETER_NOT_AVAILABLE.withParams('devicetype'), ''));
+        }
+
+        this.callbacks.onPairing(req.body.devicetype, req.body?.generateclientkey).subscribe(username => {
             const response = [{
                 success: {
                     username: username
@@ -56,82 +111,23 @@ export class HueServer extends AbstractHueServer {
         });
     };
 
-    private onLights = (req: Request, res: Response) => {
-        const username = req.params.username;
-        this.logger.debug(`HueServer: Incoming /lights request by=${username}`);
+    private onConfig = (req: Request, res: Response) => {
+        this.builder.logger.debug(`HueServer: Incoming /config request`);
+        this.callbacks.onConfig().subscribe(config => {
+            res.json(config);
+        }, (err: HueError) => {
+            res.json(ErrorResponse.create(err, '/config'));
+        });
+    };
 
-        this.callbacks.onLights(username).subscribe(lights => {
+    private onAll = (req: Request, res: Response) => {
+        const username = req.params.username;
+        this.builder.logger.debug(`HueServer: Incoming / request by=${username}`);
+
+        this.callbacks.onAll(username).subscribe(lights => {
             res.json(lights);
         }, (err: HueError) => {
-            res.json(ErrorResponse.create(err, '/lights'));
+            res.json(ErrorResponse.create(err, '/'));
         });
-    };
-
-    private onLight = (req: Request, res: Response) => {
-        const username = req.params.username;
-        const lightId = req.params.id;
-        this.logger.debug(`HueServer: Incoming /lights/${lightId} request by=${username}`);
-
-        this.callbacks.onLight(username, lightId).subscribe(light => {
-            res.json(light);
-        }, (err: HueError) => {
-            res.json(ErrorResponse.create(err, '/lights'));
-        });
-    };
-
-    private onState = (req: Request, res: Response) => {
-        const username = req.params.username;
-        const lightId = req.params.id;
-        this.logger.debug(`HueServer: Incoming /lights/${lightId}/state request by=${username}:\n${JSON.stringify(req.body)}\n`);
-
-        const response: any[] = [];
-
-        let currentLight = {};
-
-        const observables: any = [];
-
-        Object.keys(req.body).forEach((key) => {
-            const value = req.body[key];
-            this.logger.fine(`HueServer: Set key=${key} to value=${value}`);
-
-            observables.push(this.callbacks.onState(username, lightId, key, value).pipe(catchError(err => {
-                const name = `/lights/${lightId}/state/${key}`;
-                const item: any = {
-                    error: ErrorResponse.createMessage(err, `${name}`)
-                };
-                response.push(item);
-                return EMPTY;
-            }), map(light => {
-                return {key: key, value: value, light: light};
-            })));
-        });
-
-        merge(...observables).subscribe({
-            next: (entry: any) => {
-                const name = `/lights/${lightId}/state/${entry.key}`;
-                const item: any = {
-                    success: {
-                        [name]: entry.value
-                    }
-                };
-
-                // yes we are overwriting the current light all the time so that we have the complete object at the end
-                // TODO: maybe remove this. This is just for logging the complete change. Makes it more complicated...
-                currentLight = entry.light;
-                response.push(item);
-            },
-            complete: () => {
-                if (isDefined(currentLight)) {
-                    this.logger.fine(`HueServer: New light state:\n${JSON.stringify((currentLight as any).state)}\n`);
-                }
-                res.json(response);
-            }
-        });
-    };
-
-    private onDiscovery = (req: Request, res: Response) => {
-        this.logger.debug(`HueServer: Incoming discovery request.`);
-        res.contentType('application/xml');
-        res.send(discovery(this.discoveryHost, this.discoveryPort, this.udn));
     };
 }
