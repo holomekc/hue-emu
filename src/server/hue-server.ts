@@ -7,6 +7,7 @@ import {HueBuilder} from '../builder/hue-builder';
 import {HueError} from '../error/hue-error';
 import {isUndefined} from '../util/utils';
 import {HueFallback} from './hue-fallback';
+import {HueGroupsApi} from './hue-groups-api';
 import {HueLightsApi} from './hue-lights-api';
 import {HueServerCallback} from './hue-server-callback';
 import {ErrorResponse} from '../response/error-response';
@@ -44,6 +45,7 @@ export class HueServer {
         new HueLightsApi(this.app, this.builder, this.callbacks);
 
         // 2. Groups API
+        new HueGroupsApi(this.app, this.builder, this.callbacks);
 
         // 3. Schedules API
 
@@ -52,9 +54,15 @@ export class HueServer {
         // 6. Sensors API
 
         // 7. Configuration API
-        this.app.post('/api', this.onPairing);
-        this.app.get('/api/config', this.onConfig);
-        this.app.get('/api/:username', this.onAll);
+        if (this.callbacks.onPairing) {
+            this.app.post('/api', this.onPairing);
+        }
+        if (this.callbacks.onConfig) {
+            this.app.get('/api/config', this.onConfig);
+        }
+        if (this.callbacks.onAll) {
+            this.app.get('/api/:username', this.onAll);
+        }
 
         // 8. Info API (deprecated as of 1.15)
 
@@ -99,7 +107,7 @@ export class HueServer {
             res.json(ErrorResponse.create(HueError.PARAMETER_NOT_AVAILABLE.withParams('devicetype'), ''));
         }
 
-        this.callbacks.onPairing(req.body.devicetype, req.body?.generateclientkey).subscribe(username => {
+        this.callbacks.onPairing!(req.body.devicetype, req.body?.generateclientkey).subscribe(username => {
             const response = [{
                 success: {
                     username: username
@@ -113,7 +121,8 @@ export class HueServer {
 
     private onConfig = (req: Request, res: Response) => {
         this.builder.logger.debug(`HueServer: Incoming /config request`);
-        this.callbacks.onConfig().subscribe(config => {
+
+        this.callbacks.onConfig!().subscribe(config => {
             res.json(config);
         }, (err: HueError) => {
             res.json(ErrorResponse.create(err, '/config'));
@@ -124,7 +133,7 @@ export class HueServer {
         const username = req.params.username;
         this.builder.logger.debug(`HueServer: Incoming / request by=${username}`);
 
-        this.callbacks.onAll(username).subscribe(lights => {
+        this.callbacks.onAll!(username).subscribe(lights => {
             res.json(lights);
         }, (err: HueError) => {
             res.json(ErrorResponse.create(err, '/'));
