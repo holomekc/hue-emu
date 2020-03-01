@@ -20,3 +20,7 @@ export * from './error/hue-error';
 
 // Logger
 export * from './logger';
+
+// Utils
+export * from './util/utils';
+export * from './util/discovery';
