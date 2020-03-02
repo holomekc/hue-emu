@@ -19,9 +19,10 @@ You need to create an instance of HueUpnp and HueServer. To do that you first ne
 * port: used by HueServer
 * discoveryHost: used by HueUpnp and HueServer. Name of the host the emulator will be discovered from other services
 * discoveryPort: used by HueUpnp and HueServer. Port the emulator will be discovered from other services
+* https: Configuration for https. Check util class for certificate generation
 * udn: used by HueUpnp and HueSever. Unique uuid is fine
 ```typescript
-const hueBuilder = HueBuilder.builder().withHost(host).withPort(port)
+const hueBuilder = HueBuilder.builder().withHost(host).withPort(port).withHttps(undefined)
     .withDiscoveryHost(host).withDiscoveryPort(port).withUdn(udn);
 ```
 
@@ -29,7 +30,7 @@ const hueBuilder = HueBuilder.builder().withHost(host).withPort(port)
 ```typescript
 const upnp = new HueUpnp(hueBuilder);
 const server = new HueServer(hueBuilder, {
-    onPairing(event: PairingEvent): Observable<string> {
+    onPairing(req: Request, devicetype: string, generateclientkey?: boolean): Observable<string> {
         if (pairingEnabled) {
             // Do something awesome
             return of(username);
@@ -37,7 +38,7 @@ const server = new HueServer(hueBuilder, {
             return throwError(HueError.LINK_BUTTON_NOT_PRESSED);
         }
     },
-    onLights(username: string): Observable<any> {
+    onLights(req: Request, username: string): Observable<any> {
         // Return all lights
         return of({
            '1': {
@@ -45,13 +46,13 @@ const server = new HueServer(hueBuilder, {
            }
         });
     },
-    onLight(username: string, lightId: string): Observable<any> {
+    onLight(req: Request, username: string, lightId: string): Observable<any> {
         // Return a specific light
         return of({
            // ...
         });
     },
-    onState(username: string, lightId: string, key: string, value: any): Observable<any> {
+    onLightsState(req: Request, username: string, lightId: string, key: string, value: any): Observable<any> {
         // Change state.key of your fake light to the value specified 
         // Return the changed light (just for logging)
         return of({

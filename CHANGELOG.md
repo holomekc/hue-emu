@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.8] - 2020-03-02
+### Changed
+- update discovery.xml
+
 ## [0.0.7] - 2020-02-28
 ### Added
 - allow access to complete request object in all callback function
