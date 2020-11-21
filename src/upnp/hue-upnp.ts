@@ -22,7 +22,7 @@ export class HueUpnp {
         this.server.on('message', this.onMessage);
         this.server.on('listening', this.onListening);
         this.server.bind(HueUpnp.UPNP_PORT, this.builder.host, () => {
-            this.server.addMembership(HueUpnp.MULTI_ADDR);
+            this.server.addMembership(HueUpnp.MULTI_ADDR, this.builder.host);
         });
     }
 
