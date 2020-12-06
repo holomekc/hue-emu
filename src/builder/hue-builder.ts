@@ -21,6 +21,7 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
     private _discoveryHost: string = undefined as unknown as string;
     private _discoveryPort: number = undefined as unknown as number;
     private _udn: string = undefined as unknown as string;
+    private _upnpPort: number = undefined as unknown as number;
     private _logger: Logger = new DefaultLogger();
 
     /**
@@ -64,6 +65,11 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
 
     withUdn(udn: string): HueBuilder {
         this._udn = udn;
+        return this;
+    }
+
+    withUpnpPort(upnpPort: number): HueBuilder {
+        this._upnpPort = upnpPort;
         return this;
     }
 
@@ -118,6 +124,13 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
      */
     get udn(): string {
         return this._udn;
+    }
+
+    /**
+     * Get upnp port
+     */
+    get upnpPort(): number {
+        return this._upnpPort;
     }
 
     /**

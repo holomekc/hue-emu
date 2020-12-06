@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.10] - 2020-12-06
+### Changed
+- allow configuration of upnp port. If not set default 1900 is used
+
 ## [0.0.9] - 2020-11-21
 ### Changed
 - update upnp binding so it does not pick wrong interface in case multiple networkf interfaces are used. Thanks Arvid! Sorry that it took so long.
