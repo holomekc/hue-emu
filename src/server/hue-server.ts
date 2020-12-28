@@ -1,8 +1,3 @@
-import * as bodyParser from 'body-parser';
-import express from 'express';
-import {Express, Request, Response} from 'express';
-import * as http from 'http';
-import * as https from 'https';
 import {HueBuilder} from '../builder/hue-builder';
 import {HueError} from '../error/hue-error';
 import {isUndefined} from '../util/utils';
@@ -12,6 +7,10 @@ import {HueLightsApi} from './hue-lights-api';
 import {HueServerCallback} from './hue-server-callback';
 import {ErrorResponse} from '../response/error-response';
 import {discovery} from '../util/discovery';
+import {HueS} from './lib/hue-s';
+import {HueSFastify} from './lib/hue-s-fastify';
+import {HueSRequest} from './lib/hue-s-request';
+import {HueSResponse} from './lib/hue-s-response';
 
 /**
  * Responsible for handling actual calls
@@ -21,22 +20,17 @@ import {discovery} from '../util/discovery';
  */
 export class HueServer {
 
-    private readonly app: Express;
+    private readonly app: HueS;
 
     constructor(private builder: HueBuilder, private callbacks: HueServerCallback) {
-
-        this.app = express();
-        this.app.use(bodyParser.json({type: '*/*'}));
-
-        this.app.use(bodyParser.urlencoded({extended: true}));
-        this.app.use((req, res, next) => {
-            res.append('Access-Control-Allow-Origin', ['*']);
-            res.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE, HEAD');
-            res.append('Access-Control-Allow-Credentials', 'true');
-            res.append('Access-Control-Max-Age', '3600');
-            res.append('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-            res.append('Connection', 'close'); // This is important. Otherwise some clients may fail
-            next();
+        this.app = new HueSFastify(this.builder);
+        this.app.setDefaultResponseHeaders({
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE, HEAD',
+            'Access-Control-Allow-Credentials': 'true',
+            'Access-Control-Max-Age': '3600',
+            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+            'Connection': 'close' // This is important. Otherwise some clients may fail
         });
 
         this.app.get('/api/discovery.xml', this.onDiscovery);
@@ -73,34 +67,18 @@ export class HueServer {
         // Fallback
         new HueFallback(this.app, this.builder, this.callbacks);
 
-        const httpServer = http.createServer(this.app);
-
-        httpServer.listen(this.builder.port, this.builder.host, () => {
-            this.builder.logger.debug(`HueServer: Http-Server listening ${this.builder.host}:${this.builder.port}`);
+        this.app.startServer(() => {
+            // nothing to do so far
         });
-
-        if (this.builder.httpsConfig) {
-            const options = {
-                key: this.builder.httpsConfig.key,
-                cert: this.builder.httpsConfig.cert,
-                rejectUnauthorized: false,
-            };
-
-            const httpsServer = https.createServer(options, this.app);
-
-            httpsServer.listen(this.builder.httpsConfig.port, this.builder.host, () => {
-                this.builder.logger.debug(`HueServer: Https-Server listening ${this.builder.host}:${this.builder.httpsConfig?.port}`);
-            });
-        }
     }
 
-    private onDiscovery = (req: Request, res: Response) => {
+    private onDiscovery = (req: HueSRequest, res: HueSResponse) => {
         this.builder.logger.debug(`HueServer: Incoming discovery request.`);
-        res.contentType('application/xml');
+        res.setContentType('application/xml');
         res.send(discovery(this.builder.discoveryHost, this.builder.discoveryPort, this.builder.udn));
     };
 
-    private onPairing = (req: Request, res: Response) => {
+    private onPairing = (req: HueSRequest, res: HueSResponse) => {
         this.builder.logger.debug(`HueServer: Incoming pairing request:\n${JSON.stringify(req.body)}\n`);
 
         if (isUndefined(req.body.devicetype)) {
@@ -119,7 +97,7 @@ export class HueServer {
         });
     };
 
-    private onConfig = (req: Request, res: Response) => {
+    private onConfig = (req: HueSRequest, res: HueSResponse) => {
         this.builder.logger.debug(`HueServer: Incoming /config request`);
 
         this.callbacks.onConfig!(req).subscribe(config => {
@@ -129,7 +107,7 @@ export class HueServer {
         });
     };
 
-    private onAll = (req: Request, res: Response) => {
+    private onAll = (req: HueSRequest, res: HueSResponse) => {
         const username = req.params.username;
         this.builder.logger.debug(`HueServer: Incoming / request by=${username}`);
 

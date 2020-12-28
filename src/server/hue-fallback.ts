@@ -1,13 +1,15 @@
-import {Express, Request, Response} from 'express';
 import {HueError} from '../error/hue-error';
 import {HueBuilder} from '../builder/hue-builder';
 import {ErrorResponse} from '../response/error-response';
 import {isDefined} from '../util/utils';
 import {HueServerCallback} from './hue-server-callback';
+import {HueS} from './lib/hue-s';
+import {HueSRequest} from './lib/hue-s-request';
+import {HueSResponse} from './lib/hue-s-response';
 
 export class HueFallback {
 
-    constructor(private app: Express, private builder: HueBuilder, private callbacks: HueServerCallback) {
+    constructor(private app: HueS, private builder: HueBuilder, private callbacks: HueServerCallback) {
         // Fallback
         this.app.get('*', this.onFallback);
         this.app.post('*', this.onFallback);
@@ -15,7 +17,7 @@ export class HueFallback {
         this.app.delete('*', this.onFallback);
     }
 
-    private onFallback = (req: Request, res: Response) => {
+    private onFallback = (req: HueSRequest, res: HueSResponse) => {
         this.builder.logger.fine(`HueServer: Incoming ${req.method} ${req.url} request`);
 
         if(this.callbacks.onFallback) {
