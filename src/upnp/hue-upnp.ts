@@ -50,7 +50,7 @@ export class HueUpnp {
             this.server.send(resMsg, 0, resMsg.length, this.upnpPort, HueUpnp.MULTI_ADDR);
             this.server.send(resMsg2, 0, resMsg2.length, this.upnpPort, HueUpnp.MULTI_ADDR);
             this.server.send(resMsg3, 0, resMsg3.length, this.upnpPort, HueUpnp.MULTI_ADDR);
-        }, 3000);
+        }, 20000);
     }
 
     private getPort(): number {
@@ -63,30 +63,48 @@ export class HueUpnp {
     };
 
     private onMessage = (msg: Buffer, rinfo: AddressInfo) => {
-        this.builder.logger.fine(`HueUpnp: Server got request: ${msg} from ${rinfo.address}:${rinfo.port}\n`);
-
         if (msg !== null && typeof msg !== 'undefined') {
             const message = msg.toString();
 
             if(message.startsWith('M-SEARCH *')) {
-                this.builder.logger.debug(`HueUpnp: Server got M-SEARCH request: ${msg} from ${rinfo.address}:${rinfo.port}\n`);
-
-                const content = `HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=100\r\nEXT:\r\nLOCATION: http://${this.builder.discoveryHost}:${this.builder.discoveryPort}/description.xml\r\nSERVER: Linux/3.14.0 UPnP/1.0 IpBridge/1.26.0\r\nGWID.phoscon.de: ${this.shortMac}\r\nhue-bridgeid: ${this.shortMac}\r\n`
-
-                if(message.includes('ssdp:all') || message.includes('upnp:rootdevice')) {
-                    this.builder.logger.debug('HueUpnp: answer with rootdevice');
-                    let response = content + `ST: upnp:rootdevice\r\nUSN: uuid:${this.builder.udn}::upnp:rootdevice\r\n\r\n`;
-                    this.sendMessage(response, rinfo);
+                let ssdpAll = false;
+                let root = false;
+                let uuid = false;
+                let basic = false;
+                if(message.includes('ssdp:all')) {
+                    ssdpAll = true;
                 }
-                if(message.includes('ssdp:all') || message.includes(`ST: uuid:${this.shortMac}`)) {
-                    this.builder.logger.debug('HueUpnp: answer with uuid');
-                    let response = content + `ST: uuid:${this.builder.udn}\r\nUSN: uuid:${this.builder.udn}\r\n\r\n`;
-                    this.sendMessage(response, rinfo);
+                if(message.includes('upnp:rootdevice')) {
+                    root = true;
                 }
-                if(message.includes('ssdp:all') || message.includes('urn:schemas-upnp-org:device:basic:1')) {
-                    this.builder.logger.debug('HueUpnp: answer with basic');
-                    let response = content + `ST: urn:schemas-upnp-org:device:basic:1\r\nUSN: uuid:${this.builder.udn}::urn:schemas-upnp-org:device:basic:1\r\n\r\n`;
-                    this.sendMessage(response, rinfo);
+                if(message.includes(`ST: uuid:${this.shortMac}`)) {
+                    uuid = true;
+                }
+                if(message.includes('urn:schemas-upnp-org:device:basic:1')) {
+                    basic = true;
+                }
+
+                if(ssdpAll || root || uuid || basic) {
+                    // only answer if relevant
+                    this.builder.logger.debug(`HueUpnp: Server got M-SEARCH request: ${msg} from ${rinfo.address}:${rinfo.port}\n`);
+
+                    const content = `HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=100\r\nEXT:\r\nLOCATION: http://${this.builder.discoveryHost}:${this.builder.discoveryPort}/description.xml\r\nSERVER: Linux/3.14.0 UPnP/1.0 IpBridge/1.26.0\r\nGWID.phoscon.de: ${this.shortMac}\r\nhue-bridgeid: ${this.shortMac}\r\n`;
+
+                    if(ssdpAll || root) {
+                        this.builder.logger.debug('HueUpnp: answer with rootdevice');
+                        let response = content + `ST: upnp:rootdevice\r\nUSN: uuid:${this.builder.udn}::upnp:rootdevice\r\n\r\n`;
+                        this.sendMessage(response, rinfo);
+                    }
+                    if(ssdpAll || uuid) {
+                        this.builder.logger.debug('HueUpnp: answer with uuid');
+                        let response = content + `ST: uuid:${this.builder.udn}\r\nUSN: uuid:${this.builder.udn}\r\n\r\n`;
+                        this.sendMessage(response, rinfo);
+                    }
+                    if(ssdpAll || basic) {
+                        this.builder.logger.debug('HueUpnp: answer with basic');
+                        let response = content + `ST: urn:schemas-upnp-org:device:basic:1\r\nUSN: uuid:${this.builder.udn}::urn:schemas-upnp-org:device:basic:1\r\n\r\n`;
+                        this.sendMessage(response, rinfo);
+                    }
                 }
             }
 
