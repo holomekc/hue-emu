@@ -33,7 +33,7 @@ export class HueServer {
             'Connection': 'close' // This is important. Otherwise some clients may fail
         });
 
-        this.app.get('/api/discovery.xml', this.onDiscovery);
+        this.app.get('/description.xml', this.onDiscovery);
 
         // 1. Lights API
         new HueLightsApi(this.app, this.builder, this.callbacks);
@@ -75,7 +75,7 @@ export class HueServer {
     private onDiscovery = (req: HueSRequest, res: HueSResponse) => {
         this.builder.logger.debug(`HueServer: Incoming discovery request.`);
         res.setContentType('application/xml');
-        res.send(discovery(this.builder.discoveryHost, this.builder.discoveryPort, this.builder.udn));
+        res.send(discovery(this.builder.discoveryHost, this.builder.discoveryPort, this.builder.udn, this.builder.mac));
     };
 
     private onPairing = (req: HueSRequest, res: HueSResponse) => {
