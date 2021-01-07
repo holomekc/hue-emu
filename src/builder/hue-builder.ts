@@ -76,7 +76,7 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
         this._mac = mac;
         if (this.mac) {
             this._shortMac = this.mac.replace(/:/g, '');
-            this._bridgeId = this._shortMac.substring(0, 6) + 'FFFF' + this._shortMac.substring(6, this._shortMac.length);
+            this._bridgeId = (this._shortMac.substring(0, 6) + 'FFFF' + this._shortMac.substring(6, this._shortMac.length)).toUpperCase();
         }
         return this;
     }
