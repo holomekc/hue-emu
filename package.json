@@ -1,6 +1,6 @@
 {
   "name": "hue-emu",
-  "version": "0.0.10",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -30,10 +30,10 @@
     "url": "https://github.com/holomekc/hue-emu/issues"
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "uuid": "^7.0.0",
-    "rxjs": "^6.5.4",
-    "selfsigned": "^1.10.7"
+    "fastify": "3.9.2",
+    "uuid": "8.3.2",
+    "rxjs": "6.6.3",
+    "selfsigned": "1.10.8"
   },
   "devDependencies": {
     "@types/node": "^12.7.8",

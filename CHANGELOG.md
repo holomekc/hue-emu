@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.0] - 2021-01-07
+### Changed
+- upnp is more intelligent. Follows concept of deconz.
+- allow stopping of upnp server.
+- add mac to HueBuilder which can then provide useful methods like shortMac and bridgeId.
+- improve and simplify logging.
+- add interface for http server so it is easier to replace the used library.
+- replaced express with fastify.
+
+### Fixed
+- wrong parameter provided in pairing callback.
+- group api parameters.
+
 ## [0.0.10] - 2020-12-06
 ### Changed
 - allow configuration of upnp port. If not set default 1900 is used

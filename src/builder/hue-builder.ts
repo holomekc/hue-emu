@@ -1,9 +1,11 @@
 import {DefaultLogger, Logger} from '../logger';
+import {Complete} from './complete';
 import {DiscoveryHost} from './discovery-host';
 import {DiscoveryPort} from './discovery-port';
 import {Host} from './host';
 import {Https} from './https';
 import {HttpsConfig} from './https-config';
+import {Mac} from './mac';
 import {Port} from './port';
 import {Udn} from './udn';
 
@@ -13,7 +15,7 @@ import {Udn} from './udn';
  * @author Christopher Holomek
  * @since 26.02.2020
  */
-export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPort, Udn{
+export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPort, Udn, Mac, Complete {
 
     private _host: string = undefined as unknown as string;
     private _port: number = undefined as unknown as number;
@@ -22,6 +24,9 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
     private _discoveryPort: number = undefined as unknown as number;
     private _udn: string = undefined as unknown as string;
     private _upnpPort: number = undefined as unknown as number;
+    private _mac: string = undefined as unknown as string;
+    private _shortMac: string = undefined as unknown as string;
+    private _bridgeId: string = undefined as unknown as string;
     private _logger: Logger = new DefaultLogger();
 
     /**
@@ -38,6 +43,14 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
         return new HueBuilder();
     }
 
+    build(): HueBuilder {
+        if (this.mac) {
+            this._shortMac = this.mac.replace(/:/g, '');
+            this._bridgeId = this._shortMac.substring(0, 6) + 'FFFF' + this._shortMac.substring(6, this._shortMac.length);
+        }
+        return this;
+    }
+
     withHost(host: string): Port {
         this._host = host;
         return this;
@@ -48,7 +61,7 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
         return this;
     }
 
-    withHttps(httpsConfig: HttpsConfig |undefined): DiscoveryHost {
+    withHttps(httpsConfig: HttpsConfig | undefined): DiscoveryHost {
         this._httpsConfig = httpsConfig;
         return this;
     }
@@ -63,8 +76,13 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
         return this;
     }
 
-    withUdn(udn: string): HueBuilder {
+    withUdn(udn: string): Mac {
         this._udn = udn;
+        return this;
+    }
+
+    withMac(mac: string): HueBuilder {
+        this._mac = mac;
         return this;
     }
 
@@ -82,7 +100,6 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
         this._logger = logger;
         return this;
     }
-
 
     /**
      * Get host name
@@ -131,6 +148,28 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
      */
     get upnpPort(): number {
         return this._upnpPort;
+    }
+
+    /**
+     * Get mac address
+     */
+    get mac(): string {
+        return this._mac;
+    }
+
+
+    /**
+     * Get short mac address. Without ':'
+     */
+    get shortMac(): string {
+        return this._shortMac;
+    }
+
+    /**
+     * Get bridgeId based on shortMac + 'FFFF' in the middle.
+     */
+    get bridgeId(): string {
+        return this._bridgeId;
     }
 
     /**

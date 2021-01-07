@@ -6,6 +6,7 @@
  * @since 26.02.2020
  */
 import {HueBuilder} from './hue-builder';
+import {Mac} from './mac';
 
 export interface Udn {
 
@@ -13,5 +14,5 @@ export interface Udn {
      * Set udn
      * @param udn
      */
-    withUdn(udn: string): HueBuilder;
+    withUdn(udn: string): Mac;
 }
