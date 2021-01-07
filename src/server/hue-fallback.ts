@@ -18,15 +18,13 @@ export class HueFallback {
     }
 
     private onFallback = (req: HueSRequest, res: HueSResponse) => {
-        this.builder.logger.fine(`HueServer: Incoming ${req.method} ${req.url} request`);
-
         if(this.callbacks.onFallback) {
             this.callbacks.onFallback(req, res).subscribe(response => {
                 if (isDefined(response)) {
                     res.json(response);
                 }
             }, (err: HueError) => {
-                res.json(ErrorResponse.create(err, '/fallback'));
+                res.json([ErrorResponse.create(err, '/fallback')]);
             });
         } else {
             res.json({});

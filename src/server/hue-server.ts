@@ -50,6 +50,8 @@ export class HueServer {
         // 7. Configuration API
         if (this.callbacks.onPairing) {
             this.app.post('/api', this.onPairing);
+            // Harmony does that. But only for pairing. Everything else looks normal.
+            this.app.post('/api/', this.onPairing);
         }
         if (this.callbacks.onConfig) {
             this.app.get('/api/config', this.onConfig);
@@ -70,22 +72,28 @@ export class HueServer {
         this.app.startServer(() => {
             // nothing to do so far
         });
+
+        this.app.registerOnRequest(req => {
+            if(req.body) {
+                this.builder.logger.debug(`HueServer: Incoming ${req.method} ${req.url} request from ${req.ip}.\nBody:\n${JSON.stringify(req.body)}`);
+            } else {
+                this.builder.logger.debug(`HueServer: Incoming ${req.method} ${req.url} request from ${req.ip}`);
+            }
+            this.builder.logger.fine(`HueServer: Headers:\n${JSON.stringify(req.headers)}`);
+        });
     }
 
     private onDiscovery = (req: HueSRequest, res: HueSResponse) => {
-        this.builder.logger.debug(`HueServer: Incoming discovery request.`);
         res.setContentType('application/xml');
         res.send(discovery(this.builder.discoveryHost, this.builder.discoveryPort, this.builder.udn, this.builder.mac));
     };
 
     private onPairing = (req: HueSRequest, res: HueSResponse) => {
-        this.builder.logger.debug(`HueServer: Incoming pairing request:\n${JSON.stringify(req.body)}\n`);
-
         if (isUndefined(req.body.devicetype)) {
             res.json(ErrorResponse.create(HueError.PARAMETER_NOT_AVAILABLE.withParams('devicetype'), ''));
         }
 
-        this.callbacks.onPairing!(req.body.devicetype, req.body?.generateclientkey).subscribe(username => {
+        this.callbacks.onPairing!(req, req.body.devicetype, req.body?.generateclientkey).subscribe(username => {
             const response = [{
                 success: {
                     username: username
@@ -93,28 +101,24 @@ export class HueServer {
             }];
             res.json(response);
         }, (err: HueError) => {
-            res.json(ErrorResponse.create(err, ''));
+            res.json([ErrorResponse.create(err, '')]);
         });
     };
 
     private onConfig = (req: HueSRequest, res: HueSResponse) => {
-        this.builder.logger.debug(`HueServer: Incoming /config request`);
-
         this.callbacks.onConfig!(req).subscribe(config => {
             res.json(config);
         }, (err: HueError) => {
-            res.json(ErrorResponse.create(err, '/config'));
+            res.json([ErrorResponse.create(err, '/config')]);
         });
     };
 
     private onAll = (req: HueSRequest, res: HueSResponse) => {
         const username = req.params.username;
-        this.builder.logger.debug(`HueServer: Incoming / request by=${username}`);
-
         this.callbacks.onAll!(req, username).subscribe(lights => {
             res.json(lights);
         }, (err: HueError) => {
-            res.json(ErrorResponse.create(err, '/'));
+            res.json([ErrorResponse.create(err, '/')]);
         });
     };
 }

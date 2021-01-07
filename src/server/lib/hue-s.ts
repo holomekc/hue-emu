@@ -9,6 +9,8 @@ export abstract class HueS {
 
     abstract setDefaultResponseHeaders(param: { [key: string]: string }): void;
 
+    abstract registerOnRequest(callback: (req: HueSRequest) => void): void;
+
     abstract get(path: string, callback: (req: HueSRequest, res: HueSResponse) => void): void;
 
     abstract post(path: string, callback: (req: HueSRequest, res: HueSResponse) => void): void;
