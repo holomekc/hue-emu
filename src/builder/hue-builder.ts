@@ -1,5 +1,4 @@
 import {DefaultLogger, Logger} from '../logger';
-import {Complete} from './complete';
 import {DiscoveryHost} from './discovery-host';
 import {DiscoveryPort} from './discovery-port';
 import {Host} from './host';
@@ -15,7 +14,7 @@ import {Udn} from './udn';
  * @author Christopher Holomek
  * @since 26.02.2020
  */
-export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPort, Udn, Mac, Complete {
+export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPort, Udn, Mac {
 
     private _host: string = undefined as unknown as string;
     private _port: number = undefined as unknown as number;
@@ -41,14 +40,6 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
      */
     public static builder(): Host {
         return new HueBuilder();
-    }
-
-    build(): HueBuilder {
-        if (this.mac) {
-            this._shortMac = this.mac.replace(/:/g, '');
-            this._bridgeId = this._shortMac.substring(0, 6) + 'FFFF' + this._shortMac.substring(6, this._shortMac.length);
-        }
-        return this;
     }
 
     withHost(host: string): Port {
@@ -83,6 +74,10 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
 
     withMac(mac: string): HueBuilder {
         this._mac = mac;
+        if (this.mac) {
+            this._shortMac = this.mac.replace(/:/g, '');
+            this._bridgeId = this._shortMac.substring(0, 6) + 'FFFF' + this._shortMac.substring(6, this._shortMac.length);
+        }
         return this;
     }
 

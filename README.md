@@ -24,7 +24,7 @@ You need to create an instance of HueUpnp and HueServer. To do that you first ne
 * mac: mac address. E.g. aa:aa:aa:aa:aa:aa
 ```typescript
 const hueBuilder = HueBuilder.builder().withHost(host).withPort(port).withHttps(undefined)
-    .withDiscoveryHost(host).withDiscoveryPort(port).withUdn(udn).withMac(mac).build();
+    .withDiscoveryHost(host).withDiscoveryPort(port).withUdn(udn).withMac(mac);
 ```
 
 ### Create Server
