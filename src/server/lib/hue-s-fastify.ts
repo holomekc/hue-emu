@@ -11,12 +11,14 @@ import fastify, {
 
 export class HueSFastify extends HueS {
 
-    private http: FastifyInstance;
-    private https: FastifyInstance | undefined;
+    private readonly http: FastifyInstance;
+    private readonly https: FastifyInstance | undefined;
 
     constructor(builder: HueBuilder) {
         super(builder);
-        this.http = fastify();
+        this.http = fastify({
+            trustProxy: true // needed in case used behind proxy
+        });
 
         if (this.builder.httpsConfig) {
             this.https = fastify({
@@ -24,7 +26,8 @@ export class HueSFastify extends HueS {
                     key: this.builder.httpsConfig.key,
                     cert: this.builder.httpsConfig.cert,
                     rejectUnauthorized: false // This is not secure. But this is for local usage anyway.
-                }
+                },
+                trustProxy: true // needed in case used behind proxy
             });
         }
     }
@@ -109,6 +112,7 @@ export class HueSFastify extends HueS {
                 body: request.body,
                 params: request.params as ParamsDictionary,
                 ip: request.ip,
+                ips: request.ips,
                 headers: request.headers
             }, this.responseHandler(reply));
         }

@@ -1,3 +1,5 @@
+import util from 'util';
+
 export class HueError extends Error {
 
     // Generic Errors
@@ -65,5 +67,9 @@ export class HueError extends Error {
     withParams(...params: string[]): HueError {
         this._params = params;
         return this;
+    }
+
+    getFormattedMessage() {
+        return util.format(this.description, ...this.params);
     }
 }

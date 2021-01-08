@@ -4,6 +4,7 @@ export interface HueSRequest {
     body: any;
     params: ParamsDictionary;
     ip: string;
+    ips: string[] | undefined;
     headers: any;
 }
 
