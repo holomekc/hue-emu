@@ -58,6 +58,12 @@ export class HueSFastify extends HueS {
         });
     }
 
+    stopServer() {
+        this.viaInstance(instance => {
+            instance.close();
+        });
+    }
+
     private viaInstance(callback: (instance: FastifyInstance) => void) {
         callback(this.http);
         if (this.https) {

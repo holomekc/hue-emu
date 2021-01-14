@@ -41,7 +41,8 @@ let user = '';
 
 const authUsers:any = {
     'test': 'just testing',
-    '39c29d14-0d0d-426a-815d-793810d6de53': 'Harmony Hub'
+    '39c29d14-0d0d-426a-815d-793810d6de53': 'Harmony Hub',
+    'ecac7a66-4c04-4017-b526-1abdad800ae1': 'Echo'
 };
 
 let pairingEnabled = false;

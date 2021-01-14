@@ -58,4 +58,9 @@ export abstract class HueS {
      * @param onReady callback to call when server is ready
      */
     abstract startServer(onReady: () => void): void;
+
+    /**
+     * Stop server
+     */
+    abstract stopServer(): void;
 }
