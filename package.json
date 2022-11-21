@@ -30,7 +30,7 @@
     "url": "https://github.com/holomekc/hue-emu/issues"
   },
   "dependencies": {
-    "fastify": "3.9.2",
+    "fastify": "3.29.4",
     "uuid": "8.3.2",
     "rxjs": "6.6.3",
     "selfsigned": "1.10.8"
