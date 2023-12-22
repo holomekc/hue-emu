@@ -4,10 +4,12 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "clean": "rimraf dist && rimraf distTest",
-    "build:ts": "tsc -p tsconfig.json && tsc -p tsconfig.test.json",
+    "clean": "rimraf dist && rimraf dist.spec",
+    "build:ts": "tsc -p tsconfig.app.json && tsc -p tsconfig.spec.json",
     "build": "npm run clean && npm run build:ts",
     "lint": "eslint --ext .ts src",
+    "lint:fix": "eslint --ext .ts src --fix",
+    "prettier": "prettier --write .",
     "test": "npm run build && node distTest/test/test.js"
   },
   "keywords": [
@@ -30,18 +32,25 @@
     "url": "https://github.com/holomekc/hue-emu/issues"
   },
   "dependencies": {
-    "fastify": "3.9.2",
-    "uuid": "8.3.2",
-    "rxjs": "6.6.3",
-    "selfsigned": "1.10.8"
+    "fastify": "4.25.1",
+    "uuid": "9.0.1",
+    "rxjs": "7.8.1",
+    "selfsigned": "2.4.1"
   },
   "devDependencies": {
-    "@types/node": "^12.7.8",
-    "@types/uuid": "^3.4.7",
-    "@typescript-eslint/eslint-plugin": "^2.18.0",
-    "@typescript-eslint/parser": "^2.18.0",
-    "typescript": "^3.7.5",
-    "eslint": "^7.17.0",
-    "rimraf": "^3.0.0"
+    "@tsconfig/node20": "20.1.2",
+    "@types/node": "20.10.2",
+    "@types/uuid": "9.0.7",
+    "@typescript-eslint/eslint-plugin": "6.13.1",
+    "@typescript-eslint/parser": "6.13.1",
+    "typescript": "5.3.2",
+    "eslint": "8.55.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-prefer-arrow": "1.2.3",
+    "eslint-plugin-prettier": "5.0.1",
+    "eslint-plugin-unused-imports": "3.0.0",
+    "prettier": "3.1.0",
+    "prettier-eslint": "16.1.2",
+    "rimraf": "5.0.5"
   }
 }

@@ -1,4 +1,4 @@
-import selfsigned, {CertificateDefinition} from 'selfsigned';
+import selfsigned from 'selfsigned';
 
 export function isDefined(obj: any): boolean {
     return obj !== null && typeof obj !== 'undefined';
@@ -8,7 +8,7 @@ export function isUndefined(obj: any): boolean {
     return !isDefined(obj);
 }
 
-export function generateCertificate(): CertificateDefinition {
+export function generateCertificate(): selfsigned.GenerateResult {
     return selfsigned.generate([
             {name: 'commonName', value: 'hue-emu'},
             {name: 'organizationName', value: 'hue-emu'},
