@@ -23,15 +23,7 @@ const hueBuilder = HueBuilder.builder().withHost(host).withPort(port)
 
 const upnp = new HueUpnp(hueBuilder);
 const server = new HueServer(hueBuilder, {
-    onLight(username: string, lightId: string): Observable<any> {
-        return of((devices as any)[lightId]);
-    }, onState(username: string, lightId: string, key: string, value: any): Observable<any> {
-        (devices as any)[lightId].state[key] = value;
-        return of((devices as any)[lightId]);
-    },
-    onLights(username: string): Observable<any> {
-        return of(devices);
-    }, onPairing(event: PairingEvent): Observable<string> {
+    onPairing(event: PairingEvent): Observable<string> {
         const pairingEnabled = true;
 
         if (pairingEnabled) {
@@ -46,6 +38,15 @@ const server = new HueServer(hueBuilder, {
         } else {
             return throwError(HueError.LINK_BUTTON_NOT_PRESSED);
         }
+    },
+    onLights(username: string): Observable<any> {
+        return of(devices);
+    },
+    onLight(username: string, lightId: string): Observable<any> {
+        return of((devices as any)[lightId]);
+    },
+    onState(username: string, lightId: string, key: string, value: any): Observable<any> {
+        (devices as any)[lightId].state[key] = value;
+        return of((devices as any)[lightId]);
     }
-
 });
