@@ -1,14 +1,14 @@
 import selfsigned from "selfsigned";
 
-export function isDefined(obj: any): boolean {
+export const isDefined = (obj: any): boolean => {
   return obj !== null && typeof obj !== "undefined";
-}
+};
 
-export function isUndefined(obj: any): boolean {
+export const isUndefined = (obj: any): boolean => {
   return !isDefined(obj);
-}
+};
 
-export function generateCertificate(): selfsigned.GenerateResult {
+export const generateCertificate = (): selfsigned.GenerateResult => {
   return selfsigned.generate(
     [
       { name: "commonName", value: "hue-emu" },
@@ -17,4 +17,4 @@ export function generateCertificate(): selfsigned.GenerateResult {
     ],
     { keySize: 2048, clientCertificate: false, algorithm: "sha256" }
   );
-}
+};

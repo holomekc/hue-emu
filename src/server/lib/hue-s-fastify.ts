@@ -125,13 +125,13 @@ export class HueSFastify extends HueS {
 
   private responseHandler(reply: FastifyReply) {
     return {
-      setContentType(contentType: string) {
+      setContentType: (contentType: string) => {
         reply.header("Content-Type", contentType);
       },
-      send(data: string) {
+      send: (data: string) => {
         reply.send(data);
       },
-      json(data: any) {
+      json: (data: any) => {
         reply.send(data);
       },
     };
