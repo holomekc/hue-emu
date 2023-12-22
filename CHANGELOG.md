@@ -1,7 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.0.2] - 2020-02-26
+## [0.0.3] - 2020-02-27
+### Fixed
+- error handling and response
+
+## [0.0.2] - 2020-02-27
 ### Added
 - a lot of errors
 

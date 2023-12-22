@@ -47,6 +47,7 @@ export class HueError extends Error {
     private constructor(private readonly _type: number, private readonly _description: string) {
         super(_description);
         this._params = [];
+        Object.setPrototypeOf(this, HueError.prototype);
     }
 
     get type(): number {
