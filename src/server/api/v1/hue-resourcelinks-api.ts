@@ -53,7 +53,7 @@ export class HueResourcelinksApi extends HueApiV1 {
   private updateResourceLinks = (req: HueSRequest, res: HueSResponse) => {
     const username = req.params.username;
     const resourceLinksId = req.params.id;
-    this.callbacks.v1!.updateResourceLinks!(req, username, sceneId, req.body).subscribe(
+    this.callbacks.v1!.updateResourceLinks!(req, username, resourceLinksId, req.body).subscribe(
       this.defaultSubscription(res, `/resourcelinks/${resourceLinksId}`)
     );
   };
@@ -61,7 +61,7 @@ export class HueResourcelinksApi extends HueApiV1 {
   private deleteResourceLinks = (req: HueSRequest, res: HueSResponse) => {
     const username = req.params.username;
     const resourceLinksId = req.params.id;
-    this.callbacks.v1!.deleteResourceLinks!(req, username, sceneId).subscribe(
+    this.callbacks.v1!.deleteResourceLinks!(req, username, resourceLinksId).subscribe(
       this.defaultDeletionSubscription(res, `/resourcelinks/${resourceLinksId}`)
     );
   };
