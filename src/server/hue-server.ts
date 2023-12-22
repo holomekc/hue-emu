@@ -75,9 +75,9 @@ export class HueServer {
 
         this.app.registerOnRequest(req => {
             if(req.body) {
-                this.builder.logger.debug(`HueServer: Incoming ${req.method} ${req.url} request from ${req.ip}.\nBody:\n${JSON.stringify(req.body)}`);
+                this.builder.logger.debug(`HueServer: Incoming ${req.method} ${req.url} request from ${(HueServer.getIps(req))}.\nBody:\n${JSON.stringify(req.body)}`);
             } else {
-                this.builder.logger.debug(`HueServer: Incoming ${req.method} ${req.url} request from ${req.ip}`);
+                this.builder.logger.debug(`HueServer: Incoming ${req.method} ${req.url} request from ${(HueServer.getIps(req))}`);
             }
             this.builder.logger.fine(`HueServer: Headers:\n${JSON.stringify(req.headers)}`);
         });
@@ -90,6 +90,13 @@ export class HueServer {
             }
             this.builder.logger.fine(`HueServer: Headers:\n${JSON.stringify(headers)}`);
         });
+    }
+
+    private static getIps(req: HueSRequest): string {
+        if (req.ips && req.ips.length > 0) {
+            return req.ips.join(',');
+        }
+        return req.ip;
     }
 
     private onDiscovery = (req: HueSRequest, res: HueSResponse) => {

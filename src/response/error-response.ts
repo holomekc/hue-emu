@@ -16,7 +16,7 @@ export class ErrorResponse {
     }
 
     public static createMessage(error: HueError, address: string): ErrorMessage {
-        return new ErrorMessage(error.type, address, util.format(error.description, ...error.params));
+        return new ErrorMessage(error.type, address, error.getFormattedMessage());
     }
 
     private constructor(error: ErrorMessage) {

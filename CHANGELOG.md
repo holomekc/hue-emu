@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
-## [0.1.1] - 2021-01-07
+## [0.1.3] - 2021-01-08
+### Changed
+- improve feedback if used behind proxy
+- add formatted message in HueError
+
+## [0.1.2] - 2021-01-07
 ### Changed
 - bridgeId toUpperCase
 
