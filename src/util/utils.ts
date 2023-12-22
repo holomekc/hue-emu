@@ -1,17 +1,20 @@
-import selfsigned from 'selfsigned';
+import selfsigned from "selfsigned";
 
 export function isDefined(obj: any): boolean {
-    return obj !== null && typeof obj !== 'undefined';
+  return obj !== null && typeof obj !== "undefined";
 }
 
 export function isUndefined(obj: any): boolean {
-    return !isDefined(obj);
+  return !isDefined(obj);
 }
 
 export function generateCertificate(): selfsigned.GenerateResult {
-    return selfsigned.generate([
-            {name: 'commonName', value: 'hue-emu'},
-            {name: 'organizationName', value: 'hue-emu'},
-            {name: 'countryName', value: 'DE'}],
-        {keySize: 2048, clientCertificate: false, algorithm: 'sha256'});
+  return selfsigned.generate(
+    [
+      { name: "commonName", value: "hue-emu" },
+      { name: "organizationName", value: "hue-emu" },
+      { name: "countryName", value: "DE" },
+    ],
+    { keySize: 2048, clientCertificate: false, algorithm: "sha256" }
+  );
 }

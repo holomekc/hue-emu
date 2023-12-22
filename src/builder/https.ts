@@ -5,14 +5,13 @@
  * @author Christopher Holomek
  * @since 26.02.2020
  */
-import {DiscoveryHost} from './discovery-host';
-import {HttpsConfig} from './https-config';
+import { DiscoveryHost } from "./discovery-host";
+import { HttpsConfig } from "./https-config";
 
 export interface Https {
-
-    /**
-     * Set all configuration which is necessary for https
-     * @param  https configuration
-     */
-    withHttps(https: HttpsConfig | undefined): DiscoveryHost;
+  /**
+   * Set all configuration which is necessary for https
+   * @param  https configuration
+   */
+  withHttps(https: HttpsConfig | undefined): DiscoveryHost;
 }

@@ -1,10 +1,9 @@
-import {HueBuilder} from './hue-builder';
+import { HueBuilder } from "./hue-builder";
 
 export interface Mac {
-
-    /**
-     * Set mac
-     * @param mac
-     */
-    withMac(mac: string): HueBuilder;
+  /**
+   * Set mac
+   * @param mac
+   */
+  withMac(mac: string): HueBuilder;
 }

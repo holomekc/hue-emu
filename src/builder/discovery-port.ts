@@ -5,13 +5,12 @@
  * @author Christopher Holomek
  * @since 26.02.2020
  */
-import {Udn} from './udn';
+import { Udn } from "./udn";
 
 export interface DiscoveryPort {
-
-    /**
-     * Set port
-     * @param port
-     */
-    withDiscoveryPort(port: number): Udn;
+  /**
+   * Set port
+   * @param port
+   */
+  withDiscoveryPort(port: number): Udn;
 }

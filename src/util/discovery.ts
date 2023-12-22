@@ -1,4 +1,9 @@
-export const discovery = (host: string, port: number, udn: string, mac: string) => `<?xml version="1.0" encoding="UTF-8" ?>
+export const discovery = (
+  host: string,
+  port: number,
+  udn: string,
+  mac: string
+) => `<?xml version="1.0" encoding="UTF-8" ?>
 <root xmlns="urn:schemas-upnp-org:device-1-0">
     <specVersion>
         <major>1</major>
@@ -14,7 +19,7 @@ export const discovery = (host: string, port: number, udn: string, mac: string) 
         <modelName>Philips hue bridge 2015</modelName>
         <modelNumber>BSB002</modelNumber>
         <modelURL>https://github.com/holomekc/hue-emu</modelURL>
-        <serialNumber>${mac.replace(/:/g,'')}</serialNumber>
+        <serialNumber>${mac.replace(/:/g, "")}</serialNumber>
         <UDN>uuid:${udn}</UDN>
         <presentationURL>index.html</presentationURL>
         <iconList>

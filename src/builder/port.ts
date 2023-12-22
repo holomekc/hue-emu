@@ -5,13 +5,12 @@
  * @author Christopher Holomek
  * @since 26.02.2020
  */
-import {Https} from './https';
+import { Https } from "./https";
 
 export interface Port {
-
-    /**
-     * Set port
-     * @param port
-     */
-    withPort(port: number): Https;
+  /**
+   * Set port
+   * @param port
+   */
+  withPort(port: number): Https;
 }

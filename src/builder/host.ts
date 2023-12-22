@@ -5,13 +5,12 @@
  * @author Christopher Holomek
  * @since 26.02.2020
  */
-import {Port} from './port';
+import { Port } from "./port";
 
 export interface Host {
-
-    /**
-     * Set host name
-     * @param host name
-     */
-    withHost(host: string): Port;
+  /**
+   * Set host name
+   * @param host name
+   */
+  withHost(host: string): Port;
 }
