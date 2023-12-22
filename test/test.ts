@@ -36,7 +36,7 @@ const hueBuilder = HueBuilder.builder().withHost(host).withPort(port).withHttps(
     cert: certificateDefinition.cert,
     key: certificateDefinition.private
 })
-    .withDiscoveryHost(host).withDiscoveryPort(port).withUdn(udn);
+    .withDiscoveryHost(host).withDiscoveryPort(port).withUdn(udn).withMac(mac);
 
 let user = '';
 
@@ -65,7 +65,7 @@ const server = new HueServer(hueBuilder, {
             swversion: '1937045000',
             apiversion: '1.36.0',
             mac: mac, // May be checked by some clients. May also be valid value.
-            bridgeid: '1111111111111111',
+            bridgeid: mac.replace(/:/g,''),
             factorynew: false,
             replacesbridgeid: null,
             modelid: 'BSB002',
@@ -111,7 +111,7 @@ const server = new HueServer(hueBuilder, {
             swversion: '1937045000',
             apiversion: '1.36.0',
             mac: mac, // May be checked by some clients. May also be valid value.
-            bridgeid: '1111111111111111',
+            bridgeid: mac.replace(/:/g,''),
             factorynew: false,
             replacesbridgeid: null,
             modelid: 'BSB002',

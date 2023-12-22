@@ -33,7 +33,9 @@
     "fastify": "3.9.2",
     "uuid": "8.3.2",
     "rxjs": "6.6.3",
-    "selfsigned": "1.10.8"
+    "selfsigned": "1.10.8",
+    "mdns": "2.7.2",
+    "@types/mdns": "0.0.33"
   },
   "devDependencies": {
     "@types/node": "^12.7.8",

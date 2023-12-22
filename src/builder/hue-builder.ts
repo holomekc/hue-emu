@@ -4,6 +4,7 @@ import {DiscoveryPort} from './discovery-port';
 import {Host} from './host';
 import {Https} from './https';
 import {HttpsConfig} from './https-config';
+import {Mac} from './mac';
 import {Port} from './port';
 import {Udn} from './udn';
 
@@ -13,7 +14,7 @@ import {Udn} from './udn';
  * @author Christopher Holomek
  * @since 26.02.2020
  */
-export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPort, Udn{
+export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPort, Udn, Mac{
 
     private _host: string = undefined as unknown as string;
     private _port: number = undefined as unknown as number;
@@ -22,6 +23,7 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
     private _discoveryPort: number = undefined as unknown as number;
     private _udn: string = undefined as unknown as string;
     private _upnpPort: number = undefined as unknown as number;
+    private _mac: string = undefined as unknown as string;
     private _logger: Logger = new DefaultLogger();
 
     /**
@@ -63,8 +65,13 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
         return this;
     }
 
-    withUdn(udn: string): HueBuilder {
+    withUdn(udn: string): Mac {
         this._udn = udn;
+        return this;
+    }
+
+    withMac(mac: string): HueBuilder {
+        this._mac = mac;
         return this;
     }
 
@@ -131,6 +138,10 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
      */
     get upnpPort(): number {
         return this._upnpPort;
+    }
+
+    get mac(): string {
+        return this._mac;
     }
 
     /**
