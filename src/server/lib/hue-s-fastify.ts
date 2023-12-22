@@ -27,13 +27,19 @@ export class HueSFastify extends HueS {
   }
 
   startServer(onReady: () => void): void {
-    this.http.listen(this.builder.port, this.builder.host, (err, address) => {
+    this.http.listen({
+      port: this.builder.port,
+      host: this.builder.host,
+    }, (err, _address) => {
       if (err) throw err;
       this.builder.logger.info(`HueServer: Http-Server listening ${this.builder.host}:${this.builder.port}`);
     });
 
     if (this.https && this.builder.httpsConfig) {
-      this.https.listen(this.builder.httpsConfig.port, this.builder.host, (err, address) => {
+      this.https.listen({
+        port: this.builder.httpsConfig.port,
+        host: this.builder.host
+      }, (err, _address) => {
         if (err) throw err;
         this.builder.logger.info(
           `HueServer: Https-Server listening ${this.builder.host}:${this.builder.httpsConfig?.port}`
@@ -56,7 +62,9 @@ export class HueSFastify extends HueS {
 
   stopServer() {
     this.viaInstance((instance) => {
-      instance.close();
+      instance.close().then(() => {
+        this.builder.logger.info("Server stopped");
+      });
     });
   }
 
@@ -74,7 +82,7 @@ export class HueSFastify extends HueS {
   }
 
   private headerHook(headers: { [p: string]: string }) {
-    return (request: FastifyRequest, reply: FastifyReply, next: HookHandlerDoneFunction) => {
+    return (_request: FastifyRequest, reply: FastifyReply, next: HookHandlerDoneFunction) => {
       Object.keys(headers).forEach((key) => {
         reply.header(key, headers[key]);
       });
@@ -148,7 +156,7 @@ export class HueSFastify extends HueS {
 
   registerOnResponse(callback: (payload: any, headers: any) => void): void {
     this.viaInstance((instance) => {
-      instance.addHook("onSend", (request, reply, payload, done) => {
+      instance.addHook("onSend", (_request, reply, payload, done) => {
         callback(payload, reply.getHeaders());
         done();
       });

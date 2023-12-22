@@ -58,19 +58,19 @@ upnp.stop().subscribe(() => {
 });
 const server = new HueServer(hueBuilder, {
   onFallback(): Observable<any> {
-    return throwError(HueError.INTERNAL_ERROR.withParams("0"));
+    return throwError(() => HueError.INTERNAL_ERROR.withParams("0"));
   },
   onLightsDelete(): Observable<any> {
-    return throwError(HueError.INTERNAL_ERROR.withParams("1"));
+    return throwError(() => HueError.INTERNAL_ERROR.withParams("1"));
   },
   onLightsNew(): Observable<any> {
-    return throwError(HueError.INTERNAL_ERROR.withParams("2"));
+    return throwError(() => HueError.INTERNAL_ERROR.withParams("2"));
   },
   onLightsRename(): Observable<any> {
-    return throwError(HueError.INTERNAL_ERROR.withParams("3"));
+    return throwError(() => HueError.INTERNAL_ERROR.withParams("3"));
   },
   onLightsSearchNew(): Observable<void> {
-    return throwError(HueError.INTERNAL_ERROR.withParams("4"));
+    return throwError(() => HueError.INTERNAL_ERROR.withParams("4"));
   },
   onAll(): Observable<any> {
     const result: any = {};

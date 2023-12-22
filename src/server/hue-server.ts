@@ -32,7 +32,7 @@ export class HueServer {
       "Access-Control-Allow-Credentials": "true",
       "Access-Control-Max-Age": "3600",
       "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-      Connection: "close", // This is important. Otherwise some clients may fail
+      Connection: "close", // This is important. Otherwise, some clients may fail
     });
 
     this.app.get("/description.xml", this.onDiscovery);
@@ -119,8 +119,8 @@ export class HueServer {
       res.json(ErrorResponse.create(HueError.PARAMETER_NOT_AVAILABLE.withParams("devicetype"), ""));
     }
 
-    this.callbacks.onPairing!(req, req.body.devicetype, req.body?.generateclientkey).subscribe(
-      (username) => {
+    this.callbacks.onPairing!(req, req.body.devicetype, req.body?.generateclientkey).subscribe({
+      next: (username) => {
         const response = [
           {
             success: {
@@ -130,32 +130,32 @@ export class HueServer {
         ];
         res.json(response);
       },
-      (err: HueError) => {
+      error: (err: HueError) => {
         res.json([ErrorResponse.create(err, "")]);
       }
-    );
+    });
   };
 
   private onConfig = (req: HueSRequest, res: HueSResponse) => {
-    this.callbacks.onConfig!(req).subscribe(
-      (config) => {
+    this.callbacks.onConfig!(req).subscribe({
+      next: (config) => {
         res.json(config);
       },
-      (err: HueError) => {
+      error: (err: HueError) => {
         res.json([ErrorResponse.create(err, "/config")]);
       }
-    );
+    });
   };
 
   private onAll = (req: HueSRequest, res: HueSResponse) => {
     const username = req.params.username;
-    this.callbacks.onAll!(req, username).subscribe(
-      (lights) => {
+    this.callbacks.onAll!(req, username).subscribe({
+      next: (lights) => {
         res.json(lights);
       },
-      (err: HueError) => {
+      error: (err: HueError) => {
         res.json([ErrorResponse.create(err, "/")]);
       }
-    );
+    });
   };
 }

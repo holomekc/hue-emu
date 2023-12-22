@@ -28,14 +28,14 @@ export class HueGroupsApi {
     const username = req.params.username;
 
     if (this.callbacks.onGroups) {
-      this.callbacks.onGroups(req, username).subscribe(
-        (groups) => {
+      this.callbacks.onGroups(req, username).subscribe({
+        next: (groups) => {
           res.json(groups);
         },
-        (err: HueError) => {
+        error: (err: HueError) => {
           res.json([ErrorResponse.create(err, "/groups")]);
         }
-      );
+      });
     } else {
       res.json({});
     }
@@ -45,8 +45,8 @@ export class HueGroupsApi {
     const username = req.params.username;
 
     if (this.callbacks.onCreateGroup) {
-      this.callbacks.onCreateGroup(req, username).subscribe(
-        (id) => {
+      this.callbacks.onCreateGroup(req, username).subscribe({
+        next: (id) => {
           res.json([
             {
               success: {
@@ -55,10 +55,10 @@ export class HueGroupsApi {
             },
           ]);
         },
-        (err: HueError) => {
+        error: (err: HueError) => {
           res.json([ErrorResponse.create(err, "/groups")]);
         }
-      );
+      });
     } else {
       res.json([ErrorResponse.create(HueError.GROUP_TABLE_FULL, `/groups`)]);
     }
@@ -69,14 +69,14 @@ export class HueGroupsApi {
     const groupId = req.params.id;
 
     if (this.callbacks.onGroupAttributes) {
-      this.callbacks.onGroupAttributes(req, username, groupId).subscribe(
-        (group) => {
+      this.callbacks.onGroupAttributes(req, username, groupId).subscribe({
+        next: (group) => {
           res.json(group);
         },
-        (err: HueError) => {
+        error: (err: HueError) => {
           res.json([ErrorResponse.create(err, "/groups")]);
         }
-      );
+      });
     } else {
       res.json({});
     }

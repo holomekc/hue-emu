@@ -42,58 +42,58 @@ export class HueLightsApi {
   private onLights = (req: HueSRequest, res: HueSResponse) => {
     const username = req.params.username;
 
-    this.callbacks.onLights!(req, username).subscribe(
-      (lights) => {
+    this.callbacks.onLights!(req, username).subscribe({
+      next: (lights) => {
         res.json(lights);
       },
-      (err: HueError) => {
+      error: (err: HueError) => {
         res.json([ErrorResponse.create(err, "/lights")]);
       }
-    );
+    });
   };
 
   private onLightsNew = (req: HueSRequest, res: HueSResponse) => {
     const username = req.params.username;
 
-    this.callbacks.onLightsNew!(req, username).subscribe(
-      (lights) => {
+    this.callbacks.onLightsNew!(req, username).subscribe({
+      next: (lights) => {
         res.json(lights);
       },
-      (err: HueError) => {
+      error: (err: HueError) => {
         res.json([ErrorResponse.create(err, "/lights/new")]);
       }
-    );
+    });
   };
 
   private onLightsSearchNew = (req: HueSRequest, res: HueSResponse) => {
     const username = req.params.username;
 
-    this.callbacks.onLightsSearchNew!(req, username, req.body?.deviceid).subscribe(
-      () => {
+    this.callbacks.onLightsSearchNew!(req, username, req.body?.deviceid).subscribe({
+      next: () => {
         res.json([
           {
             success: { "/lights": "Searching for new devices" },
           },
         ]);
       },
-      (err: HueError) => {
+      error: (err: HueError) => {
         res.json([ErrorResponse.create(err, "/lights")]);
       }
-    );
+    });
   };
 
   private onLight = (req: HueSRequest, res: HueSResponse) => {
     const username = req.params.username;
     const lightId = req.params.id;
 
-    this.callbacks.onLight!(req, username, lightId).subscribe(
-      (light) => {
+    this.callbacks.onLight!(req, username, lightId).subscribe({
+      next: (light) => {
         res.json(light);
       },
-      (err: HueError) => {
+      error: (err: HueError) => {
         res.json([ErrorResponse.create(err, `/lights/${lightId}`)]);
       }
-    );
+    });
   };
 
   private onLightsRename = (req: HueSRequest, res: HueSResponse) => {
@@ -105,14 +105,14 @@ export class HueLightsApi {
       return;
     }
 
-    this.callbacks.onLightsRename!(req, username, lightId, req.body.name).subscribe(
-      (light) => {
+    this.callbacks.onLightsRename!(req, username, lightId, req.body.name).subscribe({
+      next: (light) => {
         res.json(light);
       },
-      (err: HueError) => {
+      error: (err: HueError) => {
         res.json([ErrorResponse.create(err, `/lights/${lightId}`)]);
       }
-    );
+    });
   };
 
   private onLightsState = (req: HueSRequest, res: HueSResponse) => {
@@ -173,13 +173,13 @@ export class HueLightsApi {
     const username = req.params.username;
     const lightId = req.params.id;
 
-    this.callbacks.onLightsDelete!(req, username, lightId).subscribe(
-      (light) => {
+    this.callbacks.onLightsDelete!(req, username, lightId).subscribe({
+      next: (light) => {
         res.json(light);
       },
-      (err: HueError) => {
+      error: (err: HueError) => {
         res.json([ErrorResponse.create(err, `/lights/${lightId}`)]);
       }
-    );
+    });
   };
 }

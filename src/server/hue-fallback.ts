@@ -22,16 +22,16 @@ export class HueFallback {
 
   private onFallback = (req: HueSRequest, res: HueSResponse) => {
     if (this.callbacks.onFallback) {
-      this.callbacks.onFallback(req, res).subscribe(
-        (response) => {
+      this.callbacks.onFallback(req, res).subscribe({
+        next: (response) => {
           if (isDefined(response)) {
             res.json(response);
           }
         },
-        (err: HueError) => {
+        error: (err: HueError) => {
           res.json([ErrorResponse.create(err, "/fallback")]);
         }
-      );
+      });
     } else {
       res.json({});
     }
