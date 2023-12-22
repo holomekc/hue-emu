@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 ## [0.1.1] - 2021-01-07
 ### Changed
+- bridgeId toUpperCase
+
+## [0.1.1] - 2021-01-07
+### Changed
 - simplify HueBuilder.
 
 ## [0.1.0] - 2021-01-07
