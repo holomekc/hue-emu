@@ -21,7 +21,6 @@ export class HueFallback {
   }
 
   private onFallback = (req: HueSRequest, res: HueSResponse) => {
-
     this.builder.logger.debug("HueFallback: No other handler answered to the request. Fallback triggered.");
 
     if (this.callbacks.onFallback) {

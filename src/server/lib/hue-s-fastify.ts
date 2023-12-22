@@ -4,7 +4,6 @@ import { HueSRequest, ParamsDictionary } from "./hue-s-request";
 import { HueSResponse } from "./hue-s-response";
 import fastify, { FastifyInstance, FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
 import { fastifyFormbody } from "@fastify/formbody";
-import * as repl from "repl";
 
 export class HueSFastify extends HueS {
   private readonly http: FastifyInstance;
@@ -126,10 +125,7 @@ export class HueSFastify extends HueS {
 
   private handler(callback: (req: HueSRequest, res: HueSResponse) => void) {
     return (request: FastifyRequest, reply: FastifyReply) => {
-      callback(
-        this.requestHandler(request),
-        this.responseHandler(reply)
-      );
+      callback(this.requestHandler(request), this.responseHandler(reply));
     };
   }
 

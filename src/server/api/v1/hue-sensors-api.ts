@@ -51,19 +51,17 @@ export class HueSensorsApi extends HueApiV1 {
     // We need to do more checking we are not sure if the necessary method is overwritten.
     if (req.body && Object.keys(req.body).length > 0) {
       // creation
-      if(this.callbacks.v1!.createSensor) {
-        this.callbacks.v1!.createSensor(req, username, req.body).subscribe(
-          this.defaultCreationSubscription(res, "/sensors")
-        );
+      if (this.callbacks.v1!.createSensor) {
+        this.callbacks
+          .v1!.createSensor(req, username, req.body)
+          .subscribe(this.defaultCreationSubscription(res, "/sensors"));
       } else {
         res.json([ErrorResponse.create(HueError.SENSOR_TYPE_NOT_ALLOWED, "/sensors")]);
       }
     } else {
       // search
-      if(this.callbacks.v1!.findNewSensors) {
-        this.callbacks.v1!.findNewSensors(req, username).subscribe(
-          this.defaultSubscription(res, "/sensors")
-        );
+      if (this.callbacks.v1!.findNewSensors) {
+        this.callbacks.v1!.findNewSensors(req, username).subscribe(this.defaultSubscription(res, "/sensors"));
       } else {
         res.json([ErrorResponse.create(HueError.COMMISSIONABLE_SENSOR_LIST_FULL, "/sensors")]);
       }
@@ -78,25 +76,33 @@ export class HueSensorsApi extends HueApiV1 {
   private getSensor = (req: HueSRequest, res: HueSResponse) => {
     const username = req.params.username;
     const sensorId = req.params.id;
-    this.callbacks.v1!.getSensor!(req, username, sensorId).subscribe(this.defaultSubscription(res, `/sensors/${sensorId}`));
+    this.callbacks.v1!.getSensor!(req, username, sensorId).subscribe(
+      this.defaultSubscription(res, `/sensors/${sensorId}`)
+    );
   };
 
   private updateSensor = (req: HueSRequest, res: HueSResponse) => {
     const username = req.params.username;
     const sensorId = req.params.id;
-    this.callbacks.v1!.updateSensor!(req, username, sensorId, req.body).subscribe(this.defaultSubscription(res, `/sensors/${sensorId}`));
+    this.callbacks.v1!.updateSensor!(req, username, sensorId, req.body).subscribe(
+      this.defaultSubscription(res, `/sensors/${sensorId}`)
+    );
   };
 
   private changeSensorConfig = (req: HueSRequest, res: HueSResponse) => {
     const username = req.params.username;
     const sensorId = req.params.id;
-    this.callbacks.v1!.changeSensorConfig!(req, username, sensorId, req.body).subscribe(this.defaultSubscription(res, `/sensors/${sensorId}/config`));
+    this.callbacks.v1!.changeSensorConfig!(req, username, sensorId, req.body).subscribe(
+      this.defaultSubscription(res, `/sensors/${sensorId}/config`)
+    );
   };
 
   private changeSensorState = (req: HueSRequest, res: HueSResponse) => {
     const username = req.params.username;
     const sensorId = req.params.id;
-    this.callbacks.v1!.changeSensorState!(req, username, sensorId, req.body).subscribe(this.defaultSubscription(res, `/sensors/${sensorId}/state`));
+    this.callbacks.v1!.changeSensorState!(req, username, sensorId, req.body).subscribe(
+      this.defaultSubscription(res, `/sensors/${sensorId}/state`)
+    );
   };
 
   private deleteSensor = (req: HueSRequest, res: HueSResponse) => {

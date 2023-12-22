@@ -4,7 +4,6 @@ import { HueSResponse } from "./lib/hue-s-response";
 import { Observable } from "rxjs";
 
 export interface HueServerCallbacks {
-
   v1?: HueServerApiV1;
 
   // Fallback

@@ -5,7 +5,6 @@ import { HueSResponse } from "../../lib/hue-s-response";
 import { Observer } from "rxjs";
 
 export abstract class HueApiV1 extends HueApi {
-
   protected defaultSubscription<T>(res: HueSResponse, address: string): Partial<Observer<T>> {
     return {
       next: (value: any) => {

@@ -1,5 +1,5 @@
 import { EMPTY, merge, Observable, tap, throwError } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { catchError } from "rxjs/operators";
 import { HueBuilder } from "../../../builder/hue-builder";
 import { HueError } from "../../../error/hue-error";
 import { ErrorResponse } from "../../../response/error-response";

@@ -9,16 +9,26 @@ export interface HueServerApiV1 {
   searchForNewLights?(req: HueSRequest, username: string, deviceId?: string[]): Observable<void>;
   getLightAttributeAndState?(req: HueSRequest, username: string, lightId: string): Observable<any>;
   setLightAttributes?(req: HueSRequest, username: string, lightId: string, name: string): Observable<any>;
-  setLightState?(req: HueSRequest, username: string, lightId: string, states: {[key: string]: any}):
-    {[key: string]: Observable<any>};
+  setLightState?(
+    req: HueSRequest,
+    username: string,
+    lightId: string,
+    states: { [key: string]: any }
+  ): { [key: string]: Observable<any> };
   deleteLights?(req: HueSRequest, username: string, lightId: string): Observable<any>;
 
   // 2. Groups API
   getAllGroups?(req: HueSRequest, username: string): Observable<any>;
   createGroup?(req: HueSRequest, username: string, body: any): Observable<any>;
   getGroupAttributes?(req: HueSRequest, username: string, groupId: string): Observable<any>;
-  setGroupAttributes?(req: HueSRequest, username: string, groupId: string,
-                      groupName?: string, lights?: string[], class_?: string): Observable<any>;
+  setGroupAttributes?(
+    req: HueSRequest,
+    username: string,
+    groupId: string,
+    groupName?: string,
+    lights?: string[],
+    class_?: string
+  ): Observable<any>;
 
   /**
    * https://developers.meethue.com/develop/hue-api/groupds-api/#set-gr-state
@@ -31,18 +41,30 @@ export interface HueServerApiV1 {
    * @param states
    *        a map of states to set
    */
-  setGroupState?(req: HueSRequest, username: string, groupId: string, states: {[key: string]: any}):
-    {[key: string]: Observable<any>};
+  setGroupState?(
+    req: HueSRequest,
+    username: string,
+    groupId: string,
+    states: { [key: string]: any }
+  ): { [key: string]: Observable<any> };
   deleteGroup?(req: HueSRequest, username: string, groupId: string): Observable<any>;
 
   // 3. Schedules API
   getAllSchedules?(req: HueSRequest, username: string): Observable<any>;
   createSchedule?(req: HueSRequest, username: string, body: any): Observable<any>;
   getScheduleAttributes?(req: HueSRequest, username: string, scheduleId: string): Observable<any>;
-  setScheduleAttributes?(req: HueSRequest, username: string, scheduleId: string,
-                         scheduleName?: string, description?: string, command?: any,
-                         time?: string, localtime?: string,
-                         status?: string, autoDelete?: boolean): Observable<any>;
+  setScheduleAttributes?(
+    req: HueSRequest,
+    username: string,
+    scheduleId: string,
+    scheduleName?: string,
+    description?: string,
+    command?: any,
+    time?: string,
+    localtime?: string,
+    status?: string,
+    autoDelete?: boolean
+  ): Observable<any>;
   deleteSchedule?(req: HueSRequest, username: string, scheduleId: string): Observable<any>;
 
   // 4. Scenes API
@@ -50,8 +72,13 @@ export interface HueServerApiV1 {
   createScene?(req: HueSRequest, username: string, body: any): Observable<any>;
   getScene?(req: HueSRequest, username: string, sceneId: string): Observable<any>;
   modifyScene?(req: HueSRequest, username: string, sceneId: string, body: any): Observable<any>;
-  modifySceneLightStates?(req: HueSRequest, username: string, sceneId: string, lightStatesId: string,
-                          body: any): Observable<any>;
+  modifySceneLightStates?(
+    req: HueSRequest,
+    username: string,
+    sceneId: string,
+    lightStatesId: string,
+    body: any
+  ): Observable<any>;
   deleteScene?(req: HueSRequest, username: string, sceneId: string): Observable<any>;
 
   // 6. Sensors API
@@ -81,7 +108,6 @@ export interface HueServerApiV1 {
   getResourceLinks?(req: HueSRequest, username: string, resourceLinksId: string): Observable<any>;
   updateResourceLinks?(req: HueSRequest, username: string, resourceLinksId: string, body: any): Observable<any>;
   deleteResourceLinks?(req: HueSRequest, username: string, resourceLinksId: string): Observable<any>;
-
 
   // 10. Capabilities API
   getAllCapabilities?(req: HueSRequest, username: string): Observable<any>;

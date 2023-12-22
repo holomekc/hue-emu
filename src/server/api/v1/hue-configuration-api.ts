@@ -74,11 +74,7 @@ export class HueConfigurationApi extends HueApiV1 {
   private modifyConfig = (req: HueSRequest, res: HueSResponse) => {
     const username = req.params.username;
     const groupId = req.params.id;
-    this.callbacks.v1!.modifyConfig!(
-      req,
-      username,
-      req.body
-    ).subscribe(this.defaultSubscription(res, "/config"));
+    this.callbacks.v1!.modifyConfig!(req, username, req.body).subscribe(this.defaultSubscription(res, "/config"));
   };
 
   private deleteUser = (req: HueSRequest, res: HueSResponse) => {

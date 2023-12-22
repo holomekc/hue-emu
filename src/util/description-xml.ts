@@ -1,8 +1,6 @@
 import { HueBuilder } from "../builder/hue-builder";
 
-export const descriptionXml = (
-  builder: HueBuilder
-) => `<?xml version="1.0" encoding="UTF-8" ?>
+export const descriptionXml = (builder: HueBuilder) => `<?xml version="1.0" encoding="UTF-8" ?>
 <root xmlns="urn:schemas-upnp-org:device-1-0">
     <specVersion>
         <major>1</major>

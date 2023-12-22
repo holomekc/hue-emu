@@ -12,7 +12,6 @@ import { HueResourcelinksApi } from "./hue-resourcelinks-api";
 import { HueCapabilitiesApi } from "./hue-capabilities-api";
 
 export class HueApiV1Handler {
-
   constructor(
     private app: HueS,
     private builder: HueBuilder,
