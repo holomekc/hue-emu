@@ -5,7 +5,7 @@ import {HueServer} from '../src/server/hue-server';
 import {HueUpnp} from '../src/upnp/hue-upnp';
 import {Request, Response} from 'express';
 import * as uuid from 'uuid';
-import {generateCertificate, isUndefined} from '../src/util/utils';
+import {generateCertificate} from '../src/util/utils';
 import {devices} from './devices';
 
 const extractArg = (index: number) => {
@@ -33,17 +33,7 @@ const hueBuilder = HueBuilder.builder().withHost(host).withPort(port).withHttps(
 
 let user = '';
 
-const hueBuilder2 = HueBuilder.builder().withHost(host).withPort(port).withHttps(undefined)
-    .withDiscoveryHost(host).withDiscoveryPort(port).withUdn(udn).withLogger({
-        debug(message?: any, ...optionalParams: any[]): void {
-        }, error(message?: any, ...optionalParams: any[]): void {
-        }, fine(message?: any, ...optionalParams: any[]): void {
-        }, info(message?: any, ...optionalParams: any[]): void {
-        }, warn(message?: any, ...optionalParams: any[]): void {
-        }
-    });
-
-const upnp = new HueUpnp(hueBuilder2);
+const upnp = new HueUpnp(hueBuilder);
 const server = new HueServer(hueBuilder, {
     onFallback(req: Request, res: Response): Observable<any> {
         return throwError(HueError.INTERNAL_ERROR.withParams('0'));

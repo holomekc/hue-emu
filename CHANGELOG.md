@@ -1,11 +1,20 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.6] - 2020-02-28
+### Added
+- start with groups api
+
+### Changed
+- Made callback functions optional. If not specified fallback will handle the call
+
 ## [0.0.5] - 2020-02-28
 ### Added
 - allows https connection as well
 - add helper method for certificate generation
 - new configuration due to https
+
+### Changed
 - restructure server so that apis can be separated
 - some callback method changed
 
