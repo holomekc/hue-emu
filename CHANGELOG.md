@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2021-01-14
+
+### Changed
+
+- Updated dependencies and prepare for v2. Not sure yet how much this lib should provide.
+  Maybe it is not a great idea to provide the complete server, but just upnp, mdns, models, error codes
+  and helper methods to create the dedicated responses. Not 100% sure yet.
+
 ## [0.1.5] - 2021-01-14
 
 ### Changed
