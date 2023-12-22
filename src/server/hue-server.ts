@@ -92,6 +92,10 @@ export class HueServer {
         });
     }
 
+    public stop(): void {
+        this.app.stopServer();
+    }
+
     private static getIps(req: HueSRequest): string {
         if (req.ips && req.ips.length > 0) {
             return req.ips.join(',');

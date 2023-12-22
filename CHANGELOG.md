@@ -1,5 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## [0.1.5] - 2021-01-14
+### Changed
+- Allow stopping of HueServer
+
 ## [0.1.4] - 2021-01-08
 ### Fixed
 - fixed build of 0.1.3
