@@ -7,8 +7,18 @@ export * from "./mdns/hue-mdns-records";
 
 // Server
 export * from "./server/hue-server";
+// Lib
+export * from "./server/lib/hue-s-request";
+export * from "./server/lib/hue-s-response";
+// Callbacks
 export * from "./server/hue-server-callbacks";
+// V1
 export * from "./server/hue-server-api-v1";
+// Error
+export * from "./server/api/v1/error/hue-error";
+export * from "./server/api/v1//error/hue-group-error";
+// V2
+export * from "./server/hue-server-api-v2";
 
 // Builder
 export * from "./builder/hue-builder";
@@ -19,10 +29,6 @@ export * from "./builder/https-config";
 export * from "./builder/discovery-host";
 export * from "./builder/discovery-port";
 export * from "./builder/udn";
-
-// Error
-export * from "./error/hue-error";
-export * from "./error/hue-group-error";
 
 // Logger
 export * from "./logger";

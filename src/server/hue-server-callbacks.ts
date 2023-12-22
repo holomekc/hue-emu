@@ -5,7 +5,4 @@ import { Observable } from "rxjs";
 
 export interface HueServerCallbacks {
   v1?: HueServerApiV1;
-
-  // Fallback
-  onFallback?(req: HueSRequest, res: HueSResponse): Observable<any>;
 }

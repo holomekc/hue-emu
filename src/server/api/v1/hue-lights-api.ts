@@ -1,13 +1,13 @@
 import { EMPTY, merge, Observable, tap, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { HueBuilder } from "../../../builder/hue-builder";
-import { HueError } from "../../../error/hue-error";
-import { ErrorResponse } from "../../../response/error-response";
+import { HueError } from "./error/hue-error";
+import { ErrorResponse } from "./response/error-response";
 import { HueS } from "../../lib/hue-s";
 import { HueSRequest } from "../../lib/hue-s-request";
 import { HueSResponse } from "../../lib/hue-s-response";
 import { HueServerCallbacks } from "../../hue-server-callbacks";
-import { HueGroupError } from "../../../error/hue-group-error";
+import { HueGroupError } from "./error/hue-group-error";
 import { HueApiV1 } from "./hue-api-v1";
 
 export class HueLightsApi extends HueApiV1 {

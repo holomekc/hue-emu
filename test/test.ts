@@ -1,14 +1,8 @@
 import { Observable, of, throwError } from "rxjs";
-import { HueSRequest } from "../dist/server/lib/hue-s-request";
-import { HueBuilder } from "../src";
-import { HueError } from "../src/error/hue-error";
-import { HueServer } from "../src/server/hue-server";
-import { HueUpnp } from "../src/upnp/hue-upnp";
+import { HueBuilder, HueError, HueServer, HueUpnp, HueGroupError, HueSRequest, generateCertificate } from "../src";
 import * as uuid from "uuid";
-import { generateCertificate } from "../src/util/utils";
 import { devices } from "./devices";
 import * as readline from "readline";
-import { HueGroupError } from "../src/error/hue-group-error";
 
 const extractArg = (index: number) => {
   return process.argv[index + 2].substr(process.argv[index + 2].indexOf("=") + 1);
@@ -58,10 +52,10 @@ upnp.stop().subscribe(() => {
   upnp = new HueUpnp(hueBuilder);
 });
 const server = new HueServer(hueBuilder, {
-  onFallback(): Observable<any> {
-    return throwError(() => HueError.INTERNAL_ERROR.withParams("0"));
-  },
   v1: {
+    fallback(): Observable<any> {
+      return throwError(() => HueError.INTERNAL_ERROR.withParams("0"));
+    },
     deleteLights(): Observable<any> {
       return throwError(() => HueError.INTERNAL_ERROR.withParams("1"));
     },

@@ -10,6 +10,7 @@ import { HueSensorsApi } from "./hue-sensors-api";
 import { HueInfoApi } from "./hue-info-api";
 import { HueResourcelinksApi } from "./hue-resourcelinks-api";
 import { HueCapabilitiesApi } from "./hue-capabilities-api";
+import { HueFallback } from "./hue-fallback";
 
 export class HueApiV1Handler {
   constructor(
@@ -43,5 +44,7 @@ export class HueApiV1Handler {
 
     // 10. Capabilities API
     new HueCapabilitiesApi(this.app, this.builder, this.callbacks);
+
+    new HueFallback(this.app, this.builder, this.callbacks);
   }
 }

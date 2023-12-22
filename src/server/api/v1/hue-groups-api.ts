@@ -1,4 +1,4 @@
-import { ErrorResponse } from "../../../response/error-response";
+import { ErrorResponse } from "./response/error-response";
 import { HueS } from "../../lib/hue-s";
 import { HueSRequest } from "../../lib/hue-s-request";
 import { HueSResponse } from "../../lib/hue-s-response";
@@ -6,7 +6,7 @@ import { HueServerCallbacks } from "../../hue-server-callbacks";
 import { HueBuilder } from "../../../builder/hue-builder";
 import { EMPTY, merge, Observable, tap, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
-import { HueGroupError } from "../../../error/hue-group-error";
+import { HueGroupError } from "./error/hue-group-error";
 import { HueApiV1 } from "./hue-api-v1";
 
 export class HueGroupsApi extends HueApiV1 {

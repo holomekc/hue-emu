@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.0] - 2021-01-14
+## [0.2.1] - 2021-12-22
+
+### Changed
+
+- More restructuring. Testing the lib integration
+
+## [0.2.0] - 2023-12-22
 
 ### Changed
 

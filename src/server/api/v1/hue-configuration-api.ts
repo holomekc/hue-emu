@@ -4,8 +4,8 @@ import { HueServerCallbacks } from "../../hue-server-callbacks";
 import { HueSRequest } from "../../lib/hue-s-request";
 import { HueSResponse } from "../../lib/hue-s-response";
 import { isUndefined } from "../../../util/utils";
-import { ErrorResponse } from "../../../response/error-response";
-import { HueError } from "../../../error/hue-error";
+import { ErrorResponse } from "./response/error-response";
+import { HueError } from "./error/hue-error";
 import { HueApiV1 } from "./hue-api-v1";
 
 export class HueConfigurationApi extends HueApiV1 {

@@ -113,5 +113,5 @@ export interface HueServerApiV1 {
   getAllCapabilities?(req: HueSRequest, username: string): Observable<any>;
 
   // Fallback
-  onFallback?(req: HueSRequest, res: HueSResponse): Observable<any>;
+  fallback?(req: HueSRequest, res: HueSResponse): Observable<any>;
 }

@@ -1,13 +1,7 @@
-import { HueMdns } from "../src/mdns/hue-mdns";
-import { HueServer } from "../src/server/hue-server";
 import { Observable, of, throwError } from "rxjs";
-import { HueSRequest } from "../src/server/lib/hue-s-request";
-import { HueBuilder } from "../src/builder/hue-builder";
 import * as uuid from "uuid";
-import { HueError } from "../src/error/hue-error";
 import * as os from "os";
-import { HueSResponse } from "../src/server/lib/hue-s-response";
-import { HueGroupError } from "../src/error/hue-group-error";
+import { HueBuilder, HueError, HueServer, HueMdns, HueGroupError, HueSRequest, HueSResponse } from "../src";
 
 const networkInterfaces = os.networkInterfaces();
 const selectedInterface = networkInterfaces.eth0 || networkInterfaces.en0;
@@ -43,11 +37,11 @@ const server = new HueServer(hueBuilder, {
   //   console.log(username);
   //   return of("test");
   // },
-  onFallback(req: HueSRequest, res: HueSResponse): Observable<any> {
-    console.log(req);
-    return of({});
-  },
   v1: {
+    fallback(req: HueSRequest, res: HueSResponse): Observable<any> {
+      console.log(req);
+      return of({});
+    },
     setGroupAttributes(
       req: HueSRequest,
       username: string,

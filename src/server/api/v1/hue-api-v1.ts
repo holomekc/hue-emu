@@ -1,6 +1,6 @@
 import { HueApi } from "../hue-api";
-import { HueError } from "../../../error/hue-error";
-import { ErrorResponse } from "../../../response/error-response";
+import { HueError } from "./error/hue-error";
+import { ErrorResponse } from "./response/error-response";
 import { HueSResponse } from "../../lib/hue-s-response";
 import { Observer } from "rxjs";
 

@@ -1,5 +1,4 @@
 import { HueBuilder } from "../builder/hue-builder";
-import { HueFallback } from "./api/hue-fallback";
 import { descriptionXml } from "../util/description-xml";
 import { HueS } from "./lib/hue-s";
 import { HueSFastify } from "./lib/hue-s-fastify";
@@ -45,8 +44,6 @@ export class HueServer {
     // API v1
     new HueApiV1Handler(this.app, this.builder, this.callbacks);
 
-    // Fallback
-    new HueFallback(this.app, this.builder, this.callbacks);
 
     this.app.startServer(() => {
       // nothing to do so far
