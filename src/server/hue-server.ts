@@ -81,6 +81,15 @@ export class HueServer {
             }
             this.builder.logger.fine(`HueServer: Headers:\n${JSON.stringify(req.headers)}`);
         });
+
+        this.app.registerOnResponse((payload, headers) => {
+            if(payload) {
+                this.builder.logger.debug(`HueServer: Send response.\nBody:\n${JSON.stringify(payload)}`);
+            } else {
+                this.builder.logger.debug(`HueServer: Send empty response.`);
+            }
+            this.builder.logger.fine(`HueServer: Headers:\n${JSON.stringify(headers)}`);
+        });
     }
 
     private onDiscovery = (req: HueSRequest, res: HueSResponse) => {

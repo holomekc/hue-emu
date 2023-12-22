@@ -136,4 +136,13 @@ export class HueSFastify extends HueS {
             });
         });
     }
+
+    registerOnResponse(callback: (payload: any, headers: any) => void): void {
+        this.viaInstance(instance => {
+            instance.addHook('onSend', (request, reply, payload, done) => {
+                callback(payload, reply.getHeaders());
+                done();
+            });
+        });
+    }
 }
