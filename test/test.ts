@@ -1,4 +1,6 @@
 import {Observable, of, throwError} from 'rxjs';
+import {HueSRequest} from '../dist/server/lib/hue-s-request';
+import {HueSResponse} from '../dist/server/lib/hue-s-response';
 import {HueBuilder} from '../src';
 import {HueError} from '../src/error/hue-error';
 import {HueServer} from '../src/server/hue-server';
@@ -40,16 +42,16 @@ let user = '';
 
 const upnp = new HueUpnp(hueBuilder);
 const server = new HueServer(hueBuilder, {
-    onFallback(req: Request, res: Response): Observable<any> {
+    onFallback(req: HueSRequest, res: HueSResponse): Observable<any> {
         return throwError(HueError.INTERNAL_ERROR.withParams('0'));
     },
-    onLightsDelete(req: Request, username: string, lightId: string): Observable<any> {
+    onLightsDelete(req: HueSRequest, username: string, lightId: string): Observable<any> {
         return throwError(HueError.INTERNAL_ERROR.withParams('1'));
-    }, onLightsNew(req: Request, username: string): Observable<any> {
+    }, onLightsNew(req: HueSRequest, username: string): Observable<any> {
         return throwError(HueError.INTERNAL_ERROR.withParams('2'));
-    }, onLightsRename(req: Request, username: string, lightId: string, name: string): Observable<any> {
+    }, onLightsRename(req: HueSRequest, username: string, lightId: string, name: string): Observable<any> {
         return throwError(HueError.INTERNAL_ERROR.withParams('3'));
-    }, onLightsSearchNew(req: Request, username: string, deviceId: string[] | undefined): Observable<void> {
+    }, onLightsSearchNew(req: HueSRequest, username: string, deviceId: string[] | undefined): Observable<void> {
         return throwError(HueError.INTERNAL_ERROR.withParams('4'));
     },
     onAll(req: Request, username: string): Observable<any> {
@@ -84,7 +86,7 @@ const server = new HueServer(hueBuilder, {
         if (pairingEnabled) {
             let username;
             username = uuid.v4();
-            console.log('create random user id: ' + username);
+            console.log('handle random user id: ' + username);
             user = username;
             return of(username);
         } else {

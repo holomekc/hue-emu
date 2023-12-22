@@ -25,7 +25,7 @@ export class HueError extends Error {
     static readonly SCENE_BUFFER_FULL = new HueError(402, 'Scene could not be created. Scene buffer in bridge full');
     static readonly SCENE_LOCKED = new HueError(403, 'Scene couldn’t not be removed, because it’s locked');
     static readonly SCENE_GROUP_EMPTY = new HueError(404, 'Scene could not be created, group is empty');
-    static readonly SENSOR_TYPE_NOT_ALLOWED = new HueError(501, 'No allowed to create sensor type');
+    static readonly SENSOR_TYPE_NOT_ALLOWED = new HueError(501, 'Not allowed to handle sensor type');
     static readonly SENSOR_LIST_FULL = new HueError(502, 'Sensor list is full');
     static readonly COMMISSIONABLE_SENSOR_LIST_FULL = new HueError(503, 'Commissionable sensor list full');
     static readonly RULE_ENGINE_FULL = new HueError(601, 'Rule engine full');
@@ -35,7 +35,7 @@ export class HueError extends Error {
     static readonly SCHEDULE_LIST_FULL = new HueError(701, 'Schedule list is full');
     static readonly TIME_ZONE_INVALID = new HueError(702, 'Schedule time-zone not valid');
     static readonly SCHEDULE_CANNOT_SET_TIME = new HueError(703, 'Schedule cannot set time and local time');
-    static readonly CANNOT_CREATE_SCHEDULE = new HueError(704, 'Cannot create schedule');
+    static readonly CANNOT_CREATE_SCHEDULE = new HueError(704, 'Cannot handle schedule');
     static readonly CANNOT_ENABLE_SCHEDULE = new HueError(705, 'Cannot enable schedule, time is in the past');
     static readonly COMMAND_ERROR = new HueError(706, 'Command error');
     static readonly SOURCE_MODEL_INVALID = new HueError(801, 'Source model invalid');

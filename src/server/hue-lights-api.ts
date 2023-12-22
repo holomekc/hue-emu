@@ -1,4 +1,3 @@
-import {Express, Request, Response} from 'express';
 import {EMPTY, merge} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {HueBuilder} from '../builder/hue-builder';
@@ -6,10 +5,13 @@ import {HueError} from '../error/hue-error';
 import {ErrorResponse} from '../response/error-response';
 import {isDefined} from '../util/utils';
 import {HueServerCallback} from './hue-server-callback';
+import {HueS} from './lib/hue-s';
+import {HueSRequest} from './lib/hue-s-request';
+import {HueSResponse} from './lib/hue-s-response';
 
 export class HueLightsApi {
 
-    constructor(private app: Express, private builder: HueBuilder, private callbacks: HueServerCallback) {
+    constructor(private app: HueS, private builder: HueBuilder, private callbacks: HueServerCallback) {
         // 1. Lights API
         if (this.callbacks.onLights) {
             this.app.get('/api/:username/lights', this.onLights);
@@ -34,7 +36,7 @@ export class HueLightsApi {
         }
     }
 
-    private onLights = (req: Request, res: Response) => {
+    private onLights = (req: HueSRequest, res: HueSResponse) => {
         const username = req.params.username;
         this.builder.logger.debug(`HueServer: Incoming GET /api/${username}/lights request`);
 
@@ -45,7 +47,8 @@ export class HueLightsApi {
         });
     };
 
-    private onLightsNew = (req: Request, res: Response) => {
+    private onLightsNew = (req: HueSRequest, res: HueSResponse) => {
+        const m = req.params;
         const username = req.params.username;
         this.builder.logger.debug(`HueServer: Incoming GET /api/${username}/lights/new request`);
 
@@ -56,7 +59,7 @@ export class HueLightsApi {
         });
     };
 
-    private onLightsSearchNew = (req: Request, res: Response) => {
+    private onLightsSearchNew = (req: HueSRequest, res: HueSResponse) => {
         const username = req.params.username;
         this.builder.logger.debug(`HueServer: Incoming POST /api/${username}/lights request:\n${JSON.stringify(req.body)}\n`);
 
@@ -69,7 +72,7 @@ export class HueLightsApi {
         });
     };
 
-    private onLight = (req: Request, res: Response) => {
+    private onLight = (req: HueSRequest, res: HueSResponse) => {
         const username = req.params.username;
         const lightId = req.params.id;
         this.builder.logger.debug(`HueServer: Incoming GET /api/${username}/lights/${lightId} request`);
@@ -81,7 +84,7 @@ export class HueLightsApi {
         });
     };
 
-    private onLightsRename = (req: Request, res: Response) => {
+    private onLightsRename = (req: HueSRequest, res: HueSResponse) => {
         const username = req.params.username;
         const lightId = req.params.id;
         this.builder.logger.debug(`HueServer: Incoming PUT /api/${username}/lights/${lightId} request:\n${JSON.stringify(req.body)}\n`);
@@ -98,7 +101,7 @@ export class HueLightsApi {
         });
     };
 
-    private onLightsState = (req: Request, res: Response) => {
+    private onLightsState = (req: HueSRequest, res: HueSResponse) => {
         const username = req.params.username;
         const lightId = req.params.id;
         this.builder.logger.debug(`HueServer: Incoming PUT /api/${username}/lights/${lightId}/state request:\n${JSON.stringify(req.body)}\n`);
@@ -148,7 +151,7 @@ export class HueLightsApi {
         });
     };
 
-    private onLightsDelete = (req: Request, res: Response) => {
+    private onLightsDelete = (req: HueSRequest, res: HueSResponse) => {
         const username = req.params.username;
         const lightId = req.params.id;
         this.builder.logger.debug(`HueServer: Incoming DELETE /api/${username}/lights/${lightId} request`);
