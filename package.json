@@ -1,6 +1,6 @@
 {
   "name": "hue-emu",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -32,7 +32,8 @@
   "dependencies": {
     "express": "^4.17.1",
     "uuid": "^7.0.0",
-    "rxjs": "^6.5.4"
+    "rxjs": "^6.5.4",
+    "selfsigned": "^1.10.7"
   },
   "devDependencies": {
     "@types/node": "^12.7.8",

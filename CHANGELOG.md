@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.5] - 2020-02-28
+### Added
+- allows https connection as well
+- add helper method for certificate generation
+- new configuration due to https
+- restructure server so that apis can be separated
+- some callback method changed
+
 ## [0.0.4] - 2020-02-28
 ### Fixed
 - error handling in onState function
