@@ -35,7 +35,7 @@ const hueBuilder = HueBuilder.builder().withHost(host).withPort(port).withHttps(
     cert: certificateDefinition.cert,
     key: certificateDefinition.private
 })
-    .withDiscoveryHost(host).withDiscoveryPort(port).withUdn(udn).withMac(mac).build();
+    .withDiscoveryHost(host).withDiscoveryPort(port).withUdn(udn).withMac(mac);
 
 let user = '';
 
