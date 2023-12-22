@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.9] - 2020-11-21
+### Changed
+- update upnp binding so it does not pick wrong interface in case multiple networkf interfaces are used. Thanks Arvid! Sorry that it took so long.
+
 ## [0.0.8] - 2020-03-02
 ### Changed
 - update discovery.xml
