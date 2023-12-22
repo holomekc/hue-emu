@@ -1,7 +1,6 @@
 import * as dnsPacket from "dns-packet";
 
 export class HueMdnsRecords {
-
   public static readonly MDNS_SERVICE_LOOKUP = "_services._dns-sd._udp.local";
   public static readonly MDNS_TYPE = "_hue._tcp.local";
 
@@ -39,7 +38,7 @@ export class HueMdnsRecords {
         port: port,
         priority: 0,
         weight: 0,
-      }
+      },
     };
   }
 
@@ -60,10 +59,7 @@ export class HueMdnsRecords {
       class: "IN",
       ttl: 4500,
       name: mdnsName,
-      data: [
-        `bridgeid=${bridgeId}`,
-        `modelid=${modelId}`
-      ]
+      data: [`bridgeid=${bridgeId}`, `modelid=${modelId}`],
     };
   }
 }

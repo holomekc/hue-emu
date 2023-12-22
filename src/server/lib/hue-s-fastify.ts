@@ -30,24 +30,30 @@ export class HueSFastify extends HueS {
   }
 
   startServer(onReady: () => void): void {
-    this.http.listen({
-      port: this.builder.port,
-      host: this.builder.host,
-    }, (err, _address) => {
-      if (err) throw err;
-      this.builder.logger.info(`HueServer: Http-Server listening ${this.builder.host}:${this.builder.port}`);
-    });
+    this.http.listen(
+      {
+        port: this.builder.port,
+        host: this.builder.host,
+      },
+      (err, _address) => {
+        if (err) throw err;
+        this.builder.logger.info(`HueServer: Http-Server listening ${this.builder.host}:${this.builder.port}`);
+      }
+    );
 
     if (this.https && this.builder.httpsConfig) {
-      this.https.listen({
-        port: this.builder.httpsConfig.port,
-        host: this.builder.host
-      }, (err, _address) => {
-        if (err) throw err;
-        this.builder.logger.info(
-          `HueServer: Https-Server listening ${this.builder.host}:${this.builder.httpsConfig?.port}`
-        );
-      });
+      this.https.listen(
+        {
+          port: this.builder.httpsConfig.port,
+          host: this.builder.host,
+        },
+        (err, _address) => {
+          if (err) throw err;
+          this.builder.logger.info(
+            `HueServer: Https-Server listening ${this.builder.host}:${this.builder.httpsConfig?.port}`
+          );
+        }
+      );
     }
 
     this.http.ready((err) => {
@@ -169,12 +175,14 @@ export class HueSFastify extends HueS {
   private additionalRegistration(instance: FastifyInstance) {
     // This is for Essentials. I have no words for this: Sending application/x-www-form-urlencoded in header,
     // but then the content is a json...
-    instance.register(fastifyFormbody, { parser: str => {
+    instance.register(fastifyFormbody, {
+      parser: (str) => {
         if (str) {
           return JSON.parse(str);
         } else {
           return undefined;
         }
-      }});
+      },
+    });
   }
 }

@@ -27,9 +27,9 @@ export class HueServer {
   ) {
     this.app = new HueSFastify(this.builder);
     this.app.setDefaultResponseHeaders({
-      "Server": "nginx",
+      Server: "nginx",
       "Cache-Control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
-      "Pragma": "no-cache",
+      Pragma: "no-cache",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE, HEAD",
       "Access-Control-Allow-Credentials": "true",
@@ -40,7 +40,7 @@ export class HueServer {
       "X-Content-Type-Options": "nosniff",
       "Content-Security-Policy": "default-src 'self'",
       "Referrer-Policy": "no-referrer",
-      "Connection": "close", // This is important. Otherwise, some clients may fail
+      Connection: "close", // This is important. Otherwise, some clients may fail
     });
 
     this.app.get("/description.xml", this.onDiscovery);
@@ -142,7 +142,7 @@ export class HueServer {
       },
       error: (err: HueError) => {
         res.json([ErrorResponse.create(err, "")]);
-      }
+      },
     });
   };
 
@@ -153,7 +153,7 @@ export class HueServer {
       },
       error: (err: HueError) => {
         res.json([ErrorResponse.create(err, "/config")]);
-      }
+      },
     });
   };
 
@@ -165,7 +165,7 @@ export class HueServer {
       },
       error: (err: HueError) => {
         res.json([ErrorResponse.create(err, "/")]);
-      }
+      },
     });
   };
 }

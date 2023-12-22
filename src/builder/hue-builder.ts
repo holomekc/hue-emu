@@ -24,7 +24,7 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
   private _mac: string = undefined as unknown as string;
   private _shortMac: string = undefined as unknown as string;
   private _bridgeId: string = undefined as unknown as string;
-  private _modelId= "BSB002";
+  private _modelId = "BSB002";
   private _logger: Logger = new DefaultLogger();
 
   /**

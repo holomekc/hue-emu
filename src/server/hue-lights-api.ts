@@ -48,7 +48,7 @@ export class HueLightsApi {
       },
       error: (err: HueError) => {
         res.json([ErrorResponse.create(err, "/lights")]);
-      }
+      },
     });
   };
 
@@ -61,7 +61,7 @@ export class HueLightsApi {
       },
       error: (err: HueError) => {
         res.json([ErrorResponse.create(err, "/lights/new")]);
-      }
+      },
     });
   };
 
@@ -78,7 +78,7 @@ export class HueLightsApi {
       },
       error: (err: HueError) => {
         res.json([ErrorResponse.create(err, "/lights")]);
-      }
+      },
     });
   };
 
@@ -92,7 +92,7 @@ export class HueLightsApi {
       },
       error: (err: HueError) => {
         res.json([ErrorResponse.create(err, `/lights/${lightId}`)]);
-      }
+      },
     });
   };
 
@@ -111,7 +111,7 @@ export class HueLightsApi {
       },
       error: (err: HueError) => {
         res.json([ErrorResponse.create(err, `/lights/${lightId}`)]);
-      }
+      },
     });
   };
 
@@ -179,7 +179,7 @@ export class HueLightsApi {
       },
       error: (err: HueError) => {
         res.json([ErrorResponse.create(err, `/lights/${lightId}`)]);
-      }
+      },
     });
   };
 }

@@ -89,7 +89,7 @@ export class HueMdns {
 
   private onMessage = (msg: Buffer, rinfo: AddressInfo) => {
     if (msg !== null && typeof msg !== "undefined") {
-      let message = dnsPacket.decode(msg);
+      const message = dnsPacket.decode(msg);
 
       let response: Buffer | undefined = undefined;
 
@@ -114,22 +114,17 @@ export class HueMdns {
               ]
             );
           } else if (question.type === "SRV" && question.name === this.mdnsName) {
-            this.builder.logger.debug(
-              `HueMdns: Received SRV ${this.mdnsName} from ${rinfo.address}:${rinfo.port}`
-            );
+            this.builder.logger.debug(`HueMdns: Received SRV ${this.mdnsName} from ${rinfo.address}:${rinfo.port}`);
             // https://datatracker.ietf.org/doc/html/rfc6763#section-12.2
-            response = this.encode([
-              HueMdnsRecords.createHueSrvRecord(this.mdnsName, this.mdnsSrvName, this.builder.discoveryPort),
-            ], [HueMdnsRecords.createHueARecord(this.mdnsSrvName, this.builder.discoveryHost)]);
-          } else if (question.type === "A" && question.name === this.mdnsSrvName) {
-            this.builder.logger.debug(
-              `HueMdns: Received A ${this.mdnsName} from ${rinfo.address}:${rinfo.port}`
+            response = this.encode(
+              [HueMdnsRecords.createHueSrvRecord(this.mdnsName, this.mdnsSrvName, this.builder.discoveryPort)],
+              [HueMdnsRecords.createHueARecord(this.mdnsSrvName, this.builder.discoveryHost)]
             );
+          } else if (question.type === "A" && question.name === this.mdnsSrvName) {
+            this.builder.logger.debug(`HueMdns: Received A ${this.mdnsName} from ${rinfo.address}:${rinfo.port}`);
             response = this.encode([HueMdnsRecords.createHueARecord(this.mdnsSrvName, this.builder.discoveryHost)]);
           } else if (question.type === "TXT" && question.name === this.mdnsName) {
-            this.builder.logger.debug(
-              `HueMdns: Received TXT ${this.mdnsName} from ${rinfo.address}:${rinfo.port}`
-            );
+            this.builder.logger.debug(`HueMdns: Received TXT ${this.mdnsName} from ${rinfo.address}:${rinfo.port}`);
             response = this.encode([HueMdnsRecords.createHueTxtRecord(this.mdnsName, this.bridgeId, this.modelId)]);
           }
 

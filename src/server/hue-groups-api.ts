@@ -34,7 +34,7 @@ export class HueGroupsApi {
         },
         error: (err: HueError) => {
           res.json([ErrorResponse.create(err, "/groups")]);
-        }
+        },
       });
     } else {
       res.json({});
@@ -57,7 +57,7 @@ export class HueGroupsApi {
         },
         error: (err: HueError) => {
           res.json([ErrorResponse.create(err, "/groups")]);
-        }
+        },
       });
     } else {
       res.json([ErrorResponse.create(HueError.GROUP_TABLE_FULL, `/groups`)]);
@@ -75,7 +75,7 @@ export class HueGroupsApi {
         },
         error: (err: HueError) => {
           res.json([ErrorResponse.create(err, "/groups")]);
-        }
+        },
       });
     } else {
       res.json({});

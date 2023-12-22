@@ -20,7 +20,10 @@ export class HueUpnp {
   private readonly bridgeId: string;
   private readonly notifier: Timeout;
 
-  constructor(private builder: HueBuilder, port: number = HueUpnp.UPNP_PORT) {
+  constructor(
+    private builder: HueBuilder,
+    port: number = HueUpnp.UPNP_PORT
+  ) {
     this.upnpPort = port;
     this.server = createSocket("udp4");
 

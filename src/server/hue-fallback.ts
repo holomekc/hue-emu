@@ -30,7 +30,7 @@ export class HueFallback {
         },
         error: (err: HueError) => {
           res.json([ErrorResponse.create(err, "/fallback")]);
-        }
+        },
       });
     } else {
       res.json({});
