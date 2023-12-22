@@ -38,7 +38,7 @@ export class HueLightsApi {
         const username = req.params.username;
         this.builder.logger.debug(`HueServer: Incoming GET /api/${username}/lights request`);
 
-        this.callbacks.onLights!(username).subscribe(lights => {
+        this.callbacks.onLights!(req, username).subscribe(lights => {
             res.json(lights);
         }, (err: HueError) => {
             res.json(ErrorResponse.create(err, '/lights'));
@@ -49,7 +49,7 @@ export class HueLightsApi {
         const username = req.params.username;
         this.builder.logger.debug(`HueServer: Incoming GET /api/${username}/lights/new request`);
 
-        this.callbacks.onLightsNew!(username).subscribe(lights => {
+        this.callbacks.onLightsNew!(req, username).subscribe(lights => {
             res.json(lights);
         }, (err: HueError) => {
             res.json(ErrorResponse.create(err, '/lights/new'));
@@ -60,7 +60,7 @@ export class HueLightsApi {
         const username = req.params.username;
         this.builder.logger.debug(`HueServer: Incoming POST /api/${username}/lights request:\n${JSON.stringify(req.body)}\n`);
 
-        this.callbacks.onLightsSearchNew!(username, req.body?.deviceid).subscribe(() => {
+        this.callbacks.onLightsSearchNew!(req, username, req.body?.deviceid).subscribe(() => {
             res.json([{
                 success: {'/lights': 'Searching for new devices'}
             }]);
@@ -74,7 +74,7 @@ export class HueLightsApi {
         const lightId = req.params.id;
         this.builder.logger.debug(`HueServer: Incoming GET /api/${username}/lights/${lightId} request`);
 
-        this.callbacks.onLight!(username, lightId).subscribe(light => {
+        this.callbacks.onLight!(req, username, lightId).subscribe(light => {
             res.json(light);
         }, (err: HueError) => {
             res.json(ErrorResponse.create(err, `/lights/${lightId}`));
@@ -91,7 +91,7 @@ export class HueLightsApi {
             return;
         }
 
-        this.callbacks.onLightsRename!(username, lightId, req.body.name).subscribe(light => {
+        this.callbacks.onLightsRename!(req, username, lightId, req.body.name).subscribe(light => {
             res.json(light);
         }, (err: HueError) => {
             res.json(ErrorResponse.create(err, `/lights/${lightId}`));
@@ -113,7 +113,7 @@ export class HueLightsApi {
             const value = req.body[key];
             this.builder.logger.fine(`HueServer: Set key=${key} to value=${value}`);
 
-            observables.push(this.callbacks.onLightsState!(username, lightId, key, value).pipe(catchError(err => {
+            observables.push(this.callbacks.onLightsState!(req, username, lightId, key, value).pipe(catchError(err => {
                 const name = `/lights/${lightId}/state/${key}`;
                 const item: any = {
                     error: ErrorResponse.createMessage(err, `${name}`)
@@ -153,7 +153,7 @@ export class HueLightsApi {
         const lightId = req.params.id;
         this.builder.logger.debug(`HueServer: Incoming DELETE /api/${username}/lights/${lightId} request`);
 
-        this.callbacks.onLightsDelete!(username, lightId).subscribe(light => {
+        this.callbacks.onLightsDelete!(req, username, lightId).subscribe(light => {
             res.json(light);
         }, (err: HueError) => {
             res.json(ErrorResponse.create(err, `/lights/${lightId}`));

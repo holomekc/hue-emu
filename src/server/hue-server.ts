@@ -122,7 +122,7 @@ export class HueServer {
     private onConfig = (req: Request, res: Response) => {
         this.builder.logger.debug(`HueServer: Incoming /config request`);
 
-        this.callbacks.onConfig!().subscribe(config => {
+        this.callbacks.onConfig!(req).subscribe(config => {
             res.json(config);
         }, (err: HueError) => {
             res.json(ErrorResponse.create(err, '/config'));
@@ -133,7 +133,7 @@ export class HueServer {
         const username = req.params.username;
         this.builder.logger.debug(`HueServer: Incoming / request by=${username}`);
 
-        this.callbacks.onAll!(username).subscribe(lights => {
+        this.callbacks.onAll!(req, username).subscribe(lights => {
             res.json(lights);
         }, (err: HueError) => {
             res.json(ErrorResponse.create(err, '/'));

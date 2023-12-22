@@ -24,7 +24,7 @@ export class HueGroupsApi {
         this.builder.logger.debug(`HueServer: Incoming GET /api/${username}/groups request`);
 
         if (this.callbacks.onGroups) {
-            this.callbacks.onGroups(username).subscribe(groups => {
+            this.callbacks.onGroups(req, username).subscribe(groups => {
                 res.json(groups);
             }, (err: HueError) => {
                 res.json(ErrorResponse.create(err, '/groups'));
@@ -39,7 +39,7 @@ export class HueGroupsApi {
         this.builder.logger.debug(`HueServer: Incoming POST /api/${username}/groups request`);
 
         if (this.callbacks.onCreateGroup) {
-            this.callbacks.onCreateGroup(req.body).subscribe(id => {
+            this.callbacks.onCreateGroup(req, req.body).subscribe(id => {
                 res.json([{
                     success: {
                         id: id
@@ -59,7 +59,7 @@ export class HueGroupsApi {
         this.builder.logger.debug(`HueServer: Incoming GET /api/${username}/groups/${groupId} request`);
 
         if (this.callbacks.onGroupAttributes) {
-            this.callbacks.onGroupAttributes(req.body).subscribe(group => {
+            this.callbacks.onGroupAttributes(req, req.body).subscribe(group => {
                 res.json(group);
             }, (err: HueError) => {
                 res.json(ErrorResponse.create(err, '/groups'));

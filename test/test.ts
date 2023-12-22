@@ -18,9 +18,14 @@ const udn: string = extractArg(2);
 const mac: string = extractArg(3);
 const ip: string = extractArg(4);
 
+
 console.log(`host=${host}, port=${port}, udn=${udn}`);
 
 let certificateDefinition = generateCertificate();
+
+console.log(certificateDefinition.private);
+
+console.log();
 
 console.log(certificateDefinition.cert);
 
@@ -38,16 +43,16 @@ const server = new HueServer(hueBuilder, {
     onFallback(req: Request, res: Response): Observable<any> {
         return throwError(HueError.INTERNAL_ERROR.withParams('0'));
     },
-    onLightsDelete(username: string, lightId: string): Observable<any> {
+    onLightsDelete(req: Request, username: string, lightId: string): Observable<any> {
         return throwError(HueError.INTERNAL_ERROR.withParams('1'));
-    }, onLightsNew(username: string): Observable<any> {
+    }, onLightsNew(req: Request, username: string): Observable<any> {
         return throwError(HueError.INTERNAL_ERROR.withParams('2'));
-    }, onLightsRename(username: string, lightId: string, name: string): Observable<any> {
+    }, onLightsRename(req: Request, username: string, lightId: string, name: string): Observable<any> {
         return throwError(HueError.INTERNAL_ERROR.withParams('3'));
-    }, onLightsSearchNew(username: string, deviceId: string[] | undefined): Observable<void> {
+    }, onLightsSearchNew(req: Request, username: string, deviceId: string[] | undefined): Observable<void> {
         return throwError(HueError.INTERNAL_ERROR.withParams('4'));
     },
-    onAll(username: string): Observable<any> {
+    onAll(req: Request, username: string): Observable<any> {
         const result: any = {};
 
         result['lights'] = JSON.parse(JSON.stringify(devices));
@@ -73,7 +78,7 @@ const server = new HueServer(hueBuilder, {
 
         return of(result);
     },
-    onPairing(devicetype: string, generateclientkey?: boolean): Observable<string> {
+    onPairing(req: Request, devicetype: string, generateclientkey?: boolean): Observable<string> {
         const pairingEnabled = true;
 
         if (pairingEnabled) {
@@ -86,13 +91,13 @@ const server = new HueServer(hueBuilder, {
             return throwError(HueError.LINK_BUTTON_NOT_PRESSED);
         }
     },
-    onLights(username: string): Observable<any> {
+    onLights(req: Request, username: string): Observable<any> {
         return of(devices);
     },
-    onLight(username: string, lightId: string): Observable<any> {
+    onLight(req: Request, username: string, lightId: string): Observable<any> {
         return of((devices as any)[lightId]);
     },
-    onLightsState(username: string, lightId: string, key: string, value: any): Observable<any> {
+    onLightsState(req: Request, username: string, lightId: string, key: string, value: any): Observable<any> {
         (devices as any)[lightId].state[key] = value;
         return of((devices as any)[lightId]);
         // return throwError(HueError.RESOURCE_NOT_AVAILABLE.withParams(lightId));

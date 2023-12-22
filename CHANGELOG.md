@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.7] - 2020-02-28
+### Added
+- allow access to complete request object in all callback function
+
 ## [0.0.6] - 2020-02-28
 ### Added
 - start with groups api
