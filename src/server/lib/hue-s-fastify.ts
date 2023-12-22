@@ -4,6 +4,7 @@ import { HueSRequest, ParamsDictionary } from "./hue-s-request";
 import { HueSResponse } from "./hue-s-response";
 import fastify, { FastifyInstance, FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
 import { fastifyFormbody } from "@fastify/formbody";
+import * as repl from "repl";
 
 export class HueSFastify extends HueS {
   private readonly http: FastifyInstance;
@@ -126,17 +127,21 @@ export class HueSFastify extends HueS {
   private handler(callback: (req: HueSRequest, res: HueSResponse) => void) {
     return (request: FastifyRequest, reply: FastifyReply) => {
       callback(
-        {
-          url: request.url,
-          method: request.method,
-          body: request.body,
-          params: request.params as ParamsDictionary,
-          ip: request.ip,
-          ips: request.ips,
-          headers: request.headers,
-        },
+        this.requestHandler(request),
         this.responseHandler(reply)
       );
+    };
+  }
+
+  private requestHandler(request: FastifyRequest): HueSRequest {
+    return {
+      url: request.url,
+      method: request.method,
+      body: request.body,
+      params: request.params as ParamsDictionary,
+      ip: request.ip,
+      ips: request.ips,
+      headers: request.headers,
     };
   }
 
@@ -163,10 +168,10 @@ export class HueSFastify extends HueS {
     });
   }
 
-  registerOnResponse(callback: (payload: any, headers: any) => void): void {
+  registerOnResponse(callback: (req: HueSRequest, status: number, payload: any, headers: any) => void): void {
     this.viaInstance((instance) => {
-      instance.addHook("onSend", (_request, reply, payload, done) => {
-        callback(payload, reply.getHeaders());
+      instance.addHook("preSerialization", (request, reply, payload, done) => {
+        callback(this.requestHandler(request), reply.statusCode, payload, reply.getHeaders());
         done();
       });
     });

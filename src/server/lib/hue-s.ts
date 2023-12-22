@@ -21,7 +21,7 @@ export abstract class HueS {
    * Register hook for outgoing responses
    * @param callback callback function to call
    */
-  abstract registerOnResponse(callback: (payload: any, headers: any) => void): void;
+  abstract registerOnResponse(callback: (req: HueSRequest, status: number, payload: any, headers: any) => void): void;
 
   /**
    * Register HTTP GET call

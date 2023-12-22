@@ -1,15 +1,14 @@
-export const discovery = (
-  host: string,
-  port: number,
-  udn: string,
-  mac: string
+import { HueBuilder } from "../builder/hue-builder";
+
+export const descriptionXml = (
+  builder: HueBuilder
 ) => `<?xml version="1.0" encoding="UTF-8" ?>
 <root xmlns="urn:schemas-upnp-org:device-1-0">
     <specVersion>
         <major>1</major>
         <minor>0</minor>
     </specVersion>
-    <URLBase>http://${host}:${port}/</URLBase>
+    <URLBase>http://${builder.discoveryHost}:${builder.discoveryPort}/</URLBase>
     <device>
         <deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType>
         <friendlyName>Hue-Emu</friendlyName>
@@ -19,8 +18,8 @@ export const discovery = (
         <modelName>Philips hue bridge 2015</modelName>
         <modelNumber>BSB002</modelNumber>
         <modelURL>https://github.com/holomekc/hue-emu</modelURL>
-        <serialNumber>${mac.replace(/:/g, "")}</serialNumber>
-        <UDN>uuid:${udn}</UDN>
+        <serialNumber>${builder.mac.replace(/:/g, "")}</serialNumber>
+        <UDN>uuid:${builder.udn}</UDN>
         <presentationURL>index.html</presentationURL>
         <iconList>
             <icon>

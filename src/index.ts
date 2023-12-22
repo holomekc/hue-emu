@@ -1,9 +1,14 @@
 // UPNP
 export * from "./upnp/hue-upnp";
 
+// MDNS
+export * from "./mdns/hue-mdns";
+export * from "./mdns/hue-mdns-records";
+
 // Server
 export * from "./server/hue-server";
-export * from "./server/hue-server-callback";
+export * from "./server/hue-server-callbacks";
+export * from "./server/hue-server-api-v1";
 
 // Builder
 export * from "./builder/hue-builder";
@@ -17,10 +22,11 @@ export * from "./builder/udn";
 
 // Error
 export * from "./error/hue-error";
+export * from "./error/hue-group-error";
 
 // Logger
 export * from "./logger";
 
 // Utils
 export * from "./util/utils";
-export * from "./util/discovery";
+export * from "./util/description-xml";
