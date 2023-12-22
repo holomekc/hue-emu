@@ -62,7 +62,6 @@ const server = new HueServer(hueBuilder, {
     return throwError(() => HueError.INTERNAL_ERROR.withParams("0"));
   },
   v1: {
-
     deleteLights(): Observable<any> {
       return throwError(() => HueError.INTERNAL_ERROR.withParams("1"));
     },
@@ -144,19 +143,22 @@ const server = new HueServer(hueBuilder, {
         return throwError(HueError.UNAUTHORIZED_USER);
       }
     },
-    setLightState(req: HueSRequest, username: string, lightId: string, states: { [p: string]: any }):
-      { [p: string]: Observable<any> } {
+    setLightState(
+      req: HueSRequest,
+      username: string,
+      lightId: string,
+      states: { [p: string]: any }
+    ): { [p: string]: Observable<any> } {
       if (authUsers[username]) {
         const result: { [p: string]: Observable<any> } = {};
         Object.entries(states).forEach(([key, value]) => {
-
           (devices as any)[lightId].state[key] = value;
           result[key] = of((devices as any)[lightId]);
         });
         return result;
       } else {
         return {
-          doesNotMatter: throwError(() => new HueGroupError(HueError.UNAUTHORIZED_USER))
+          doesNotMatter: throwError(() => new HueGroupError(HueError.UNAUTHORIZED_USER)),
         };
       }
     },
@@ -174,7 +176,7 @@ const server = new HueServer(hueBuilder, {
         starterkitid: "",
       });
     },
-  }
+  },
 });
 
 const rl = readline.createInterface({

@@ -15,7 +15,7 @@ const selectedInterface = networkInterfaces.eth0 || networkInterfaces.en0;
 let mac = "ab:ab:ab:ab:ab:ab";
 let address = "0.0.0.0";
 
-selectedInterface?.forEach(networkInterface => {
+selectedInterface?.forEach((networkInterface) => {
   if (networkInterface.family === "IPv4") {
     mac = networkInterface.mac;
     address = networkInterface.address;
@@ -48,36 +48,51 @@ const server = new HueServer(hueBuilder, {
     return of({});
   },
   v1: {
-    setGroupAttributes(req: HueSRequest, username: string, groupId: string,
-                       groupName?: string, lights?: string[], class_?: string): Observable<any> {
+    setGroupAttributes(
+      req: HueSRequest,
+      username: string,
+      groupId: string,
+      groupName?: string,
+      lights?: string[],
+      class_?: string
+    ): Observable<any> {
       console.log(groupName);
       console.log(lights);
       console.log(class_);
       return of({
-        "test": 123
+        test: 123,
       });
     },
-    setGroupState(req: HueSRequest, username: string, groupId: string, states: { [p: string]: any }): { [p: string]: Observable<any> } {
+    setGroupState(
+      req: HueSRequest,
+      username: string,
+      groupId: string,
+      states: { [p: string]: any }
+    ): { [p: string]: Observable<any> } {
       const result: { [p: string]: Observable<any> } = {};
       Object.entries(states).forEach(([key, value]) => {
         if (key === "bri") {
           result[key] = throwError(() => HueError.INVALID_UPDATE_STATE);
         } else {
           result[key] = of({
-            "test": 123,
+            test: 123,
           });
         }
       });
 
       return result;
     },
-    setLightState(req: HueSRequest, username: string, lightId: string, states: { [p: string]: any }):
-      { [p: string]: Observable<any> } {
+    setLightState(
+      req: HueSRequest,
+      username: string,
+      lightId: string,
+      states: { [p: string]: any }
+    ): { [p: string]: Observable<any> } {
       const result: { [p: string]: Observable<any> } = {};
       Object.entries(states).forEach(([key, value]) => {
         if (key === "bri") {
           result[key] = throwError(() => HueError.INVALID_UPDATE_STATE);
-        } else if(key === "unauth") {
+        } else if (key === "unauth") {
           result[key] = throwError(() => new HueGroupError(HueError.UNAUTHORIZED_USER));
         } else {
           result[key] = of(value);
@@ -122,7 +137,7 @@ const server = new HueServer(hueBuilder, {
       // pairingEnabled = false;
       //return of(username).pipe(delay(1000));
     },
-  }
+  },
 });
 
 let hueMdns = new HueMdns(hueBuilder);
