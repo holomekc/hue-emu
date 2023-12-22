@@ -17,6 +17,9 @@ export * from "./server/hue-server-api-v1";
 // Error
 export * from "./server/api/v1/error/hue-error";
 export * from "./server/api/v1//error/hue-group-error";
+// Response
+export * from "./server/api/v1/response/error-message";
+export * from "./server/api/v1/response/error-response";
 // V2
 export * from "./server/hue-server-api-v2";
 

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.2] - 2021-12-22
+
+### Fixed
+
+- Fix imports
+
 ## [0.2.1] - 2021-12-22
 
 ### Changed
