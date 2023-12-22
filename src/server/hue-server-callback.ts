@@ -16,7 +16,7 @@ export interface HueServerCallback {
     // 2. Groups API
     onGroups?(req: HueSRequest, username: string): Observable<any>;
     onCreateGroup?(req: HueSRequest, username: string): Observable<any>;
-    onGroupAttributes?(req: HueSRequest, content: any): Observable<any>;
+    onGroupAttributes?(req: HueSRequest, username: string, groupId: string): Observable<any>;
 
     // 3. Schedules API
 

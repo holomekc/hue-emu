@@ -45,7 +45,7 @@ export class HueSFastify extends HueS {
         this.http.ready(err => {
             if(err) throw err;
             if (this.https) {
-                this.http.ready(err => {
+                this.https.ready(err => {
                     if (err) throw err;
                     onReady();
                 });
@@ -55,11 +55,17 @@ export class HueSFastify extends HueS {
         });
     }
 
-    setDefaultResponseHeaders(headers: { [header: string]: string }): void {
-        this.http.addHook('preHandler', this.headerHook(headers));
+    private viaInstance(callback: (instance: FastifyInstance) => void) {
+        callback(this.http);
         if (this.https) {
-            this.https.addHook('preHandler', this.headerHook(headers));
+            callback(this.https);
         }
+    }
+
+    setDefaultResponseHeaders(headers: { [header: string]: string }): void {
+        this.viaInstance(instance => {
+           instance.addHook('preHandler', this.headerHook(headers));
+        });
     }
 
     private headerHook(headers: { [p: string]: string }) {
@@ -72,19 +78,27 @@ export class HueSFastify extends HueS {
     }
 
     delete(path: string, callback: (req: HueSRequest, res: HueSResponse) => void): void {
-        this.http.delete(path, this.handler(callback));
+        this.viaInstance(instance => {
+            instance.delete(path, this.handler(callback));
+        });
     }
 
     get(path: string, callback: (req: HueSRequest, res: HueSResponse) => void): void {
-        this.http.get(path, this.handler(callback));
+        this.viaInstance(instance => {
+            instance.get(path, this.handler(callback));
+        });
     }
 
     post(path: string, callback: (req: HueSRequest, res: HueSResponse) => void): void {
-        this.http.post(path, this.handler(callback));
+        this.viaInstance(instance => {
+            instance.post(path, this.handler(callback));
+        });
     }
 
     put(path: string, callback: (req: HueSRequest, res: HueSResponse) => void): void {
-        this.http.put(path, this.handler(callback));
+        this.viaInstance(instance => {
+            instance.put(path, this.handler(callback));
+        });
     }
 
     private handler(callback: (req: HueSRequest, res: HueSResponse) => void) {
@@ -93,7 +107,9 @@ export class HueSFastify extends HueS {
                 url: request.url,
                 method: request.method,
                 body: request.body,
-                params: request.params as ParamsDictionary
+                params: request.params as ParamsDictionary,
+                ip: request.ip,
+                headers: request.headers
             }, this.responseHandler(reply));
         }
     }
@@ -110,5 +126,14 @@ export class HueSFastify extends HueS {
                 reply.send(data)
             }
         }
+    }
+
+    registerOnRequest(callback: (req: HueSRequest) => void): void {
+        this.viaInstance(instance => {
+            instance.addHook('onRequest', (request, reply, done) => {
+                this.handler(callback)(request, reply);
+                done();
+            });
+        });
     }
 }

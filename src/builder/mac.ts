@@ -1,4 +1,4 @@
-import {HueBuilder} from './hue-builder';
+import {Complete} from './complete';
 
 export interface Mac {
 
@@ -6,5 +6,5 @@ export interface Mac {
      * Set mac
      * @param mac
      */
-    withMac(mac: string): HueBuilder;
+    withMac(mac: string): Complete;
 }

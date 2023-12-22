@@ -10,7 +10,7 @@
 Allows to simulate a hue bridge
 
 ## Getting Started
-The emulator does not force you to follow any structure regaring the data provided. It just helps you with the communication. Check out the examples to see how it works.
+The emulator does not force you to follow any structure regarding the data provided. It just helps you with the communication. Check out the examples to see how it works.
 
 ### Create builder
 
@@ -21,9 +21,10 @@ You need to create an instance of HueUpnp and HueServer. To do that you first ne
 * discoveryPort: used by HueUpnp and HueServer. Port the emulator will be discovered from other services
 * https: Configuration for https. Check util class for certificate generation
 * udn: used by HueUpnp and HueSever. Unique uuid is fine
+* mac: mac address. E.g. aa:aa:aa:aa:aa:aa
 ```typescript
 const hueBuilder = HueBuilder.builder().withHost(host).withPort(port).withHttps(undefined)
-    .withDiscoveryHost(host).withDiscoveryPort(port).withUdn(udn);
+    .withDiscoveryHost(host).withDiscoveryPort(port).withUdn(udn).withMac(mac).build();
 ```
 
 ### Create Server
