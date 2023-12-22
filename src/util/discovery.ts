@@ -7,14 +7,14 @@ export const discovery = (host: string, port: number, udn: string) => `<?xml ver
     <URLBase>http://${host}:${port}/</URLBase>
     <device>
         <deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType>
-        <friendlyName>openHAB Hue Emulation</friendlyName>
+        <friendlyName>Hue-Emu</friendlyName>
         <manufacturer>Royal Philips Electronics</manufacturer>
         <manufacturerURL>http://www.philips.com</manufacturerURL>
         <modelDescription>Philips hue Personal Wireless Lighting</modelDescription>
         <modelName>Philips hue bridge 2015</modelName>
-        <modelNumber>929000226503</modelNumber>
+        <modelNumber>BSB002</modelNumber>
         <modelURL>http://www.meethue.com</modelURL>
-        <serialNumber>0017880ae670</serialNumber>
+        <serialNumber>111111111111</serialNumber>
         <UDN>uuid:${udn}</UDN>
         <serviceList>
             <service>
