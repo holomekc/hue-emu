@@ -14,16 +14,25 @@ export class HueUpnp {
     private static readonly MULTI_ADDR = '239.255.255.250';
 
     private readonly server: Socket;
+    private readonly upnpPort: number;
 
     constructor(private builder: HueBuilder) {
+        this.upnpPort = builder.upnpPort;
         this.server = createSocket('udp4');
 
         this.server.on('error', this.onError);
         this.server.on('message', this.onMessage);
         this.server.on('listening', this.onListening);
-        this.server.bind(HueUpnp.UPNP_PORT, this.builder.host, () => {
+        this.server.bind(this.getPort(), this.builder.host, () => {
             this.server.addMembership(HueUpnp.MULTI_ADDR, this.builder.host);
         });
+    }
+
+    private getPort(): number {
+        if (this.upnpPort === null || typeof this.upnpPort === 'undefined') {
+            return HueUpnp.UPNP_PORT;
+        }
+        return this.upnpPort;
     }
 
     private onError = (err: Error) => {
