@@ -27,12 +27,20 @@ export class HueServer {
   ) {
     this.app = new HueSFastify(this.builder);
     this.app.setDefaultResponseHeaders({
+      "Server": "nginx",
+      "Cache-Control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+      "Pragma": "no-cache",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE, HEAD",
       "Access-Control-Allow-Credentials": "true",
       "Access-Control-Max-Age": "3600",
-      "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-      Connection: "close", // This is important. Otherwise, some clients may fail
+      "Access-Control-Allow-Headers": "Content-Type",
+      "X-XSS-Protection": "1; mode=block",
+      "X-Frame-Options": "SAMEORIGIN",
+      "X-Content-Type-Options": "nosniff",
+      "Content-Security-Policy": "default-src 'self'",
+      "Referrer-Policy": "no-referrer",
+      "Connection": "close", // This is important. Otherwise, some clients may fail
     });
 
     this.app.get("/description.xml", this.onDiscovery);
@@ -115,7 +123,9 @@ export class HueServer {
   };
 
   private onPairing = (req: HueSRequest, res: HueSResponse) => {
-    if (isUndefined(req.body.devicetype)) {
+    if (isUndefined(req.body)) {
+      res.json(ErrorResponse.create(HueError.MISSING_PARAMETERS, ""));
+    } else if (isUndefined(req.body.devicetype)) {
       res.json(ErrorResponse.create(HueError.PARAMETER_NOT_AVAILABLE.withParams("devicetype"), ""));
     }
 

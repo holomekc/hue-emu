@@ -21,10 +21,10 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
   private _discoveryHost: string = undefined as unknown as string;
   private _discoveryPort: number = undefined as unknown as number;
   private _udn: string = undefined as unknown as string;
-  private _upnpPort: number = undefined as unknown as number;
   private _mac: string = undefined as unknown as string;
   private _shortMac: string = undefined as unknown as string;
   private _bridgeId: string = undefined as unknown as string;
+  private _modelId= "BSB002";
   private _logger: Logger = new DefaultLogger();
 
   /**
@@ -84,8 +84,13 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
     return this;
   }
 
-  withUpnpPort(upnpPort: number): HueBuilder {
-    this._upnpPort = upnpPort;
+  /**
+   * Set the modelId to use for the bridge. Default "BSB002".
+   * @param modelId
+   *        identifier of the model
+   */
+  withModelId(modelId: string = "BSB002") {
+    this._modelId = modelId;
     return this;
   }
 
@@ -142,13 +147,6 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
   }
 
   /**
-   * Get upnp port
-   */
-  get upnpPort(): number {
-    return this._upnpPort;
-  }
-
-  /**
    * Get mac address
    */
   get mac(): string {
@@ -167,6 +165,13 @@ export class HueBuilder implements Host, Port, Https, DiscoveryHost, DiscoveryPo
    */
   get bridgeId(): string {
     return this._bridgeId;
+  }
+
+  /**
+   * Get modelId of emulated bridge
+   */
+  get modelId(): string {
+    return this._modelId;
   }
 
   /**

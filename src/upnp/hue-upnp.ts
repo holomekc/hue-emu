@@ -20,11 +20,8 @@ export class HueUpnp {
   private readonly bridgeId: string;
   private readonly notifier: Timeout;
 
-  constructor(private builder: HueBuilder) {
-    this.upnpPort = builder.upnpPort;
-    if (this.upnpPort === null || typeof this.upnpPort === "undefined") {
-      this.upnpPort = HueUpnp.UPNP_PORT;
-    }
+  constructor(private builder: HueBuilder, port: number = HueUpnp.UPNP_PORT) {
+    this.upnpPort = port;
     this.server = createSocket("udp4");
 
     this.server.on("error", this.onError);
@@ -35,7 +32,7 @@ export class HueUpnp {
     });
 
     this.shortMac = builder.mac.replace(/:/g, "");
-    this.bridgeId = this.shortMac.substring(0, 6) + "FFFF" + this.shortMac.substring(6, this.shortMac.length);
+    this.bridgeId = builder.bridgeId;
 
     let message = `NOTIFY * HTTP/1.1\r\nHOST: ${HueUpnp.MULTI_ADDR}:${this.upnpPort}\r\nCACHE-CONTROL: max-age=100\r\nLOCATION: http://${this.builder.discoveryHost}:${this.builder.discoveryPort}/description.xml\r\nSERVER: Linux/3.14.0 UPnP/1.0 IpBridge/1.26.0\r\nhue-bridgeid: ${this.bridgeId}\r\nNTS: ssdp:alive\r\nNT: upnp:rootdevice\r\nUSN: uuid:${this.builder.udn}::upnp:rootdevice\r\n\r\n`;
     const resMsg = Buffer.from(message);

@@ -3,6 +3,7 @@ import { HueS } from "./hue-s";
 import { HueSRequest, ParamsDictionary } from "./hue-s-request";
 import { HueSResponse } from "./hue-s-response";
 import fastify, { FastifyInstance, FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
+import { fastifyFormbody } from "@fastify/formbody";
 
 export class HueSFastify extends HueS {
   private readonly http: FastifyInstance;
@@ -13,6 +14,7 @@ export class HueSFastify extends HueS {
     this.http = fastify({
       trustProxy: true, // needed in case used behind proxy
     });
+    this.additionalRegistration(this.http);
 
     if (this.builder.httpsConfig) {
       this.https = fastify({
@@ -23,6 +25,7 @@ export class HueSFastify extends HueS {
         },
         trustProxy: true, // needed in case used behind proxy
       });
+      this.additionalRegistration(this.https);
     }
   }
 
@@ -147,7 +150,7 @@ export class HueSFastify extends HueS {
 
   registerOnRequest(callback: (req: HueSRequest) => void): void {
     this.viaInstance((instance) => {
-      instance.addHook("onRequest", (request, reply, done) => {
+      instance.addHook("preValidation", (request, reply, done) => {
         this.handler(callback)(request, reply);
         done();
       });
@@ -161,5 +164,17 @@ export class HueSFastify extends HueS {
         done();
       });
     });
+  }
+
+  private additionalRegistration(instance: FastifyInstance) {
+    // This is for Essentials. I have no words for this: Sending application/x-www-form-urlencoded in header,
+    // but then the content is a json...
+    instance.register(fastifyFormbody, { parser: str => {
+        if (str) {
+          return JSON.parse(str);
+        } else {
+          return undefined;
+        }
+      }});
   }
 }
