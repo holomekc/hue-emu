@@ -78,3 +78,4 @@ const server = new HueServer(hueBuilder, {
 ## Examples
 
 You can find an example in test directory. Npm arguments must be set manually.
+
